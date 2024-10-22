@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-emqx
+{{- include "eddie.emqx.labels" . | indent 2 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-emqx
+  ports:
+    - name: mqtt
+      port: 1883
+      protocol: TCP
+      targetPort: mqtt
+    - name: mqttssl
+      port: 8883
+      protocol: TCP
+      targetPort: mqttssl
+    - name: dashboard
+      port: 18083
+      protocol: TCP
+      targetPort: dashboard

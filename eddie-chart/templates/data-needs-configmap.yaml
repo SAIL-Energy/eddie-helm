@@ -1,0 +1,91 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: data-needs-configmap
+data:
+  data-needs.json: |-
+    [
+      {
+        "type": "validated",
+        "id": "9bd0668f-cc19-40a8-99db-dc2cb2802b17",
+        "name": "LAST_3_MONTHS",
+        "description": "Historical validated consumption data for the last three months",
+        "purpose": "Some purpose",
+        "policyLink": "https://example.com/toc",
+        "duration": {
+          "type": "relativeDuration",
+          "start": "-P3M",
+          "end": "P-1D"
+        },
+        "energyType": "ELECTRICITY",
+        "minGranularity": "PT15M",
+        "maxGranularity": "P1D"
+      },
+      {
+        "type": "validated",
+        "id": "dcbc1c74-37bd-4c5b-ab2e-fd0be9c1edf3",
+        "name": "NEXT_10_DAYS_ONE_MEASUREMENT_PER_DAY",
+        "description": "Historical validated consumption data for the next 10 days, one measurement per day",
+        "purpose": "Some purpose",
+        "policyLink": "https://example.com/toc",
+        "duration": {
+          "type": "relativeDuration",
+          "start": "P1D",
+          "end": "P10D"
+        },
+        "energyType": "ELECTRICITY",
+        "minGranularity": "P1D",
+        "maxGranularity": "P1D"
+      },
+      {
+        "type": "genericAiida",
+        "id": "5dc71d7e-e8cd-4403-a3a8-d3c095c97a84",
+        "name": "FUTURE_NEAR_REALTIME_DATA",
+        "description": "Near realtime consumption data from the smart meter",
+        "purpose": "purpose",
+        "policyLink": "https://example.com/toc",
+        "duration": {
+          "type": "relativeDuration",
+          "start": "P0D",
+          "end": "P10D"
+        },
+        "transmissionSchedule": "*/5 * * * * *",
+        "dataTags": [
+          "1-0:1.8.0",
+          "1-0:1.7.0"
+        ]
+      },
+      {
+        "type": "validated",
+        "id": "b35dc783-a25e-487a-a914-6064bdd7feb5",
+        "name": "LAST_3_MONTHS_HOURLY_MEASUREMENTS_PER_DAY",
+        "description": "Historical validated consumption data for the last three months, one measurement per hour",
+        "purpose": "Some purpose",
+        "policyLink": "https://example.com/toc",
+        "duration": {
+          "type": "relativeDuration",
+          "start": "-P3M",
+          "end": "P-1D"
+        },
+        "energyType": "ELECTRICITY",
+        "minGranularity": "PT1H",
+        "maxGranularity": "PT1H"
+      },
+      {
+        "type": "account",
+        "id": "8685eed4-ab97-4c57-9409-76295792ee1c",
+        "name": "Accounting point master data data need",
+        "description": "Gets accounting point master data",
+        "purpose": "Some purpose",
+        "policyLink": "https://example.com/toc"
+      },
+      {
+        "type": "account",
+        "id": "8685eed4-ab97-4c57-9409-76295792ee1d",
+        "name": "Disabled accounting point master data data need",
+        "description": "Gets accounting point master data",
+        "purpose": "Some purpose",
+        "policyLink": "https://example.com/toc",
+        "enabled": false
+      }
+    ]

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+  {{- include "eddie.core.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.core.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+    {{- include "eddie.core.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: eddie-core
+          image: "ghcr.io/eddie-energy/eddie:{{ .Values.core.version }}"
+          volumeMounts:
+            - name: data-needs-volume
+              mountPath: /opt/core/config/data-needs.json
+              subPath: data-needs.json
+          ports:
+            - containerPort: 8080
+          env:
+            - name: EDDIE_JWT_HMAC_SECRET
+              value: {{ .Values.core.jwtHmacSecret }}
+            - name: EDDIE_PUBLIC_URL
+              value: {{ .Values.core.publicUrl }}
+            - name: EDDIE_DATA_NEEDS_CONFIG_DATA_NEED_SOURCE
+              value: config
+            - name: EDDIE_DATA_NEEDS_CONFIG_FILE
+              value: "./config/data-needs.json"
+            - name: SPRING_DATASOURCE_URL
+              value: {{ include "eddie.postgres-url" . }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: password
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "{{ .Release.Name }}-kafka:9094"
+            - name: REGION_CONNECTOR_SIM_ENABLED
+              value: {{ .Values.regionConnectors.simulation.enabled | quote }}
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}
+
+      volumes:
+        - name: data-needs-volume
+          configMap:
+            name: data-needs-configmap
