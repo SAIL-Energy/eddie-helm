@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-kafka
+  {{- include "eddie.kafka.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.kafka.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-kafka
+  template:
+    metadata:
+    {{- include "eddie.kafka.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: kafka
+          image: "docker.io/bitnami/kafka:{{ .Values.postgres.version }}"
+          ports:
+            - containerPort: 9092
+              name: internal
+            - containerPort: 9093
+              name: controller
+            - containerPort: 9094
+              name: external
+          env:
+            # KRaft settings
+            - name: KAFKA_CFG_NODE_ID
+              value: "0"
+            - name: KAFKA_CFG_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+              value: "0@localhost:9093"
+            # Listeners
+            - name: KAFKA_CFG_LISTENERS
+              value: "PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094"
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: "PLAINTEXT://localhost:9092,EXTERNAL://{{ .Release.Name }}-kafka:9094"
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT"
+            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+              value: "PLAINTEXT"
+            # Big messages produced for validated historical data
+            # See: https://stackoverflow.com/questions/63528508/recordtoolargeexception-in-kafka
+            - name: KAFKA_CFG_SOCKET_RECEIVE_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_CFG_SOCKET_SEND_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_CFG_SOCKET_REQUEST_MAX_BYTES
+              value: "104857600"
+            - name: KAFKA_CFG_MESSAGE_MAX_BYTES
+              value: "104857600"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - |
+                    # Block until Kafka is available
+                    kafka-broker-api-versions.sh --bootstrap-server=localhost:9092
+
+                    {{- range .Values.kafka.topics }}
+                    kafka-topics.sh --bootstrap-server=localhost:9092 --create --if-not-exists --topic {{ .name }} --replication-factor {{ .replicationFactor }} --partitions {{ .partitions }}
+                    {{- end }}
+          readinessProbe:
+            tcpSocket:
+              port: 9092
+            timeoutSeconds: 5
+            periodSeconds: 5
+            initialDelaySeconds: 30
+            failureThreshold: 5
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "kafka-broker-api-versions.sh --bootstrap-server=localhost:9092"
+            timeoutSeconds: 5
+            periodSeconds: 5
+            initialDelaySeconds: 30
