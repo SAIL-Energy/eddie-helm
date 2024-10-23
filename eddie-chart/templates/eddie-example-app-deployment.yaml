@@ -6,7 +6,7 @@ metadata:
     app: {{ .Release.Name }}-example-app
     {{- include "eddie.labels" . | indent 2 }}
 spec:
-  replicas: {{ .Values.exampleApp.replicaCount | default 1 }}
+  replicas: {{ .Values.exampleApp.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-example-app

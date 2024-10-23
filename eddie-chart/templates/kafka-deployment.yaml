@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-kafka
   {{- include "eddie.kafka.labels" . | indent 2 }}
 spec:
-  replicas: {{ .Values.kafka.replicaCount | default 1 }}
+  replicas: {{ .Values.kafka.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-kafka

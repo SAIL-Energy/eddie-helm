@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-core
   {{- include "eddie.core.labels" . | indent 2 }}
 spec:
-  replicas: {{ .Values.core.replicaCount | default 1 }}
+  replicas: {{ .Values.core.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-core

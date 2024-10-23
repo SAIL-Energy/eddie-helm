@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-postgres
   {{- include "eddie.postgres.labels" . | indent 2 }}
 spec:
-  replicas: {{ .Values.postgres.replicaCount | default 1 }}
+  replicas: {{ .Values.postgres.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-postgres
