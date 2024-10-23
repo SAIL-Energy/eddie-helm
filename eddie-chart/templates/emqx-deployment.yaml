@@ -4,7 +4,7 @@ metadata:
   name: {{ .Release.Name }}-emqx
   {{- include "eddie.emqx.labels" . | indent 2 }}
 spec:
-  replicas: {{ .Values.emqx.replicaCount | default 1 }}
+  replicas: {{ .Values.emqx.replicaCount }}
   selector:
     matchLabels:
       app: {{ .Release.Name }}-emqx
