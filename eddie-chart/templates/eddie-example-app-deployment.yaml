@@ -35,9 +35,11 @@ spec:
                   name: {{ .Release.Name }}-postgres-secret
                   key: password
             - name: EDDIE_PUBLIC_URL
-              value: {{ .Values.core.publicUrl }}
+              value: "http://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
             - name: KAFKA_BOOTSTRAP_SERVERS
               value: {{ include "eddie.kafka-url" . }}
+            - name: PUBLIC_CONTEXT_PATH
+              value: "/{{ .Values.ingress.basePath }}/example-app"
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
