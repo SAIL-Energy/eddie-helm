@@ -10,4 +10,5 @@ spec:
     app: {{ .Release.Name }}-example-app
   ports:
     - port: 8081
+      targetPort: 8081
       protocol: TCP
