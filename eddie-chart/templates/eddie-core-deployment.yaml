@@ -19,6 +19,8 @@ spec:
             - name: data-needs-volume
               mountPath: /opt/core/config/data-needs.json
               subPath: data-needs.json
+            - name: ponton
+              mountPath: /opt/ponton
           ports:
             - containerPort: 8080
           env:
@@ -48,6 +50,8 @@ spec:
               value: "{{ .Release.Name }}-kafka:9094"
             - name: REGION_CONNECTOR_SIM_ENABLED
               value: {{ .Values.regionConnectors.simulation.enabled | quote }}
+            {{- include "eddie.region-connector-env.at-eda" . | indent 12 }}
+            {{- include "eddie.region-connector-env.fr-enedis" . | indent 12 }}
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
@@ -56,3 +60,6 @@ spec:
         - name: data-needs-volume
           configMap:
             name: data-needs-configmap
+        - name: ponton
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-core-ponton-pvc
