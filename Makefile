@@ -1,20 +1,26 @@
 RELEASE_NAME=eddie
-NAMESPACE=d4g
+NAMESPACE=hardening
 
 template:
-	helm template ./eddie-chart --debug --output-dir ./out
-
-install-dry-run:
-	helm install $(RELEASE_NAME) ./eddie-chart --dry-run
+	helm template ./eddie-chart \
+	--values ./eddie-chart/values.yaml \
+	--values ./eddie-chart/values-$(NAMESPACE).yaml \
+	--debug --output-dir ./out
 
 install:
-	helm install $(RELEASE_NAME) -n $(NAMESPACE) ./eddie-chart
+	helm install $(RELEASE_NAME) -n $(NAMESPACE) \
+	--values ./eddie-chart/values.yaml \
+	--values ./eddie-chart/values-$(NAMESPACE).yaml \
+	./eddie-chart
 
 remove:
 	helm uninstall -n $(NAMESPACE) $(RELEASE_NAME)
 
 upgrade:
-	helm upgrade -n $(NAMESPACE) $(RELEASE_NAME) ./eddie-chart
+	helm upgrade -n $(NAMESPACE) $(RELEASE_NAME) \
+	--values ./eddie-chart/values.yaml \
+	--values ./eddie-chart/values-$(NAMESPACE).yaml \
+	./eddie-chart
 
 cluster-init:
 	kind create cluster --name eddie-cluster
@@ -36,3 +42,9 @@ create-ghcr-secret:
 	  --docker-server=ghcr.io \
 	  --docker-username=benjaminellmer \
 	  --docker-password=${CR_PAT}
+
+create-fingrid-jks-secret:
+	kubectl -n $(NAMESPACE) create secret generic fingrid-jks --from-file $(FILE_LOCATION)
+
+create-aansluiting-jks-secret:
+	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file $(FILE_LOCATION)
