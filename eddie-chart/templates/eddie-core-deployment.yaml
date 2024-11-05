@@ -21,6 +21,8 @@ spec:
               subPath: data-needs.json
             - name: ponton
               mountPath: /opt/ponton
+            {{- include "eddie.region-connectors.fi-fingrid.volumeMount" . | indent 12 }}
+            {{- include "eddie.region-connectors.nl-mijn-aansluiting.volumeMount" . | indent 12 }}
           ports:
             - containerPort: 8080
               name: api
@@ -53,9 +55,11 @@ spec:
               value: "{{ .Release.Name }}-kafka:9094"
             - name: REGION_CONNECTOR_SIM_ENABLED
               value: {{ .Values.regionConnectors.simulation.enabled | quote }}
-            {{- include "eddie.region-connector-env.at-eda" . | indent 12 }}
-            {{- include "eddie.region-connector-env.fr-enedis" . | indent 12 }}
-            {{- include "eddie.region-connector-env.us-green-button" . | indent 12 }}
+            {{- include "eddie.region-connectors.at-eda.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.fr-enedis.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.es-datadis.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.us-green-button.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.nl-mijn-aansluiting.envs" . | indent 12 }}
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
@@ -67,3 +71,5 @@ spec:
         - name: ponton
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-core-ponton-pvc
+        {{- include "eddie.region-connectors.fi-fingrid.volume" . | indent 8 }}
+        {{- include "eddie.region-connectors.nl-mijn-aansluiting.volume" . | indent 8 }}

@@ -55,6 +55,19 @@ regionConnectors:
       username: ""
       password: ""
 
+  fiFingrid:
+    enabled: "false"
+    apiUrl: ""
+    organisation:
+      name: ""
+      user: ""
+    keystore:
+      secretName: ""
+      password: ""
+      key:
+        alias: ""
+        password: ""
+
   frEnedis:
     enabled: "false"
     polling: ""
@@ -92,11 +105,18 @@ regionConnectors:
 
   nlMijnAansluiting:
     enabled: "false"
-    keyId: ""
     issuerUrl: ""
-    scope: ""
-    redirectUri: ""
+    redirectUrl: ""
+    single:
+      keyId: ""
+      scope: ""
+      clientId: ""
+    continuous:
+      keyId: ""
+      clientId: ""
+      scope: ""
     keystore:
+      secretName: ""
       password: ""
       key:
         alias: ""
