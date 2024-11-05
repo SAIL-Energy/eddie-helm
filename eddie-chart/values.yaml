@@ -9,7 +9,7 @@ postgres:
   replicaCount: 1
   encryptedPassword: ""
   encryptedUsername: ""
-  version: ""
+  version: "latest"
   port: 5432
   storageSize: "1Gi"
 

@@ -55,6 +55,7 @@ spec:
               value: {{ .Values.regionConnectors.simulation.enabled | quote }}
             {{- include "eddie.region-connector-env.at-eda" . | indent 12 }}
             {{- include "eddie.region-connector-env.fr-enedis" . | indent 12 }}
+            {{- include "eddie.region-connector-env.us-green-button" . | indent 12 }}
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
