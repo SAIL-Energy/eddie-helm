@@ -9,5 +9,5 @@ spec:
   type: LoadBalancer
   ports:
     - name: external
-      port: 9094
+      port: {{ .Values.kafka.externalPort }}
       targetPort: 9094
