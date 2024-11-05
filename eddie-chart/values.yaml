@@ -1,0 +1,119 @@
+ghcrImagePullSecrets:
+  name: ""
+
+ingress:
+  basePath: ""
+  host: ""
+
+postgres:
+  replicaCount: 1
+  encryptedPassword: ""
+  encryptedUsername: ""
+  version: ""
+  port: 5432
+  storageSize: "1Gi"
+
+kafka:
+  replicaCount: 1
+  version: "3.6"
+  externalPort: 9094
+  topics:
+    - name: permission-market-documents
+      replicationFactor: 1
+      partitions: 1
+    - name: validated-historical-data
+      replicationFactor: 1
+      partitions: 1
+
+exampleApp:
+  replicaCount: 1
+  version: "latest"
+
+emqx:
+  replicaCount: 1
+  version: "5.6"
+
+core:
+  replicaCount: 1
+  version: "latest"
+  jwtHmacSecret: ""
+  ponton:
+    storageSize: "1Gi"
+
+regionConnectors:
+  atEda:
+    enabled: "false"
+    eligiblePartyId: ""
+    pontonMessenger:
+      adapter:
+        id: ""
+        version: ""
+      hostname: ""
+      apiEndpoint: ""
+      port: ""
+      folder: ""
+      username: ""
+      password: ""
+
+  frEnedis:
+    enabled: "false"
+    polling: ""
+    basePath: ""
+    client:
+      id: ""
+      secret: ""
+
+  dkEnerginet:
+    enabled: "false"
+    customer:
+      client:
+        id: ""
+        basePath: ""
+    polling: ""
+    retry: ""
+
+  aiida:
+    enabled: "false"
+    customer:
+      id: ""
+    bcrypt-strength: ""
+    mqtt:
+      server-uri: ""
+      username: ""
+      password: ""
+
+  esDatadis:
+    enabled: "false"
+    username:
+    password:
+    polling: ""
+    retry: ""
+    basePath: ""
+
+  nlMijnAansluiting:
+    enabled: "false"
+    keyId: ""
+    issuerUrl: ""
+    scope: ""
+    redirectUri: ""
+    keystore:
+      password: ""
+      key:
+        alias: ""
+        password: ""
+
+  usGreenButton:
+    enabled: "false"
+    basePath: ""
+    redirectUrl: ""
+    client:
+      apiToken: ""
+    webhookSecret: ""
+    activationBatchSize: ""
+    clients:
+      - id: ""
+        secret: ""
+
+  simulation:
+    enabled: "false"
+
