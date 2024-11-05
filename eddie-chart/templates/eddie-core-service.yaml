@@ -7,5 +7,9 @@ spec:
   selector:
     app: {{ .Release.Name }}-core
   ports:
-    - port: 8080
-      protocol: TCP
+    - name: api
+      port: 8080
+      targetPort: 8080
+    - name: outbound
+      port: 9090
+      targetPort: 9090

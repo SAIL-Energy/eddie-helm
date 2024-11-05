@@ -30,10 +30,10 @@ spec:
                 name: {{ .Release.Name }}-core
                 port:
                   number: 8080
-          - path: /{{ .Values.ingress.basePath }}/kafka
+          - path: /{{ .Values.ingress.basePath }}/eddie/outbound-connectors
             pathType: Prefix
             backend:
               service:
-                name: {{ .Release.Name }}-kafka
+                name: {{ .Release.Name }}-core
                 port:
-                  number: 9094
+                  number: 9090
