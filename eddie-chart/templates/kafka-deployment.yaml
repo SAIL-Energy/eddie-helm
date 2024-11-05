@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: kafka
-          image: "docker.io/bitnami/kafka:{{ .Values.postgres.version }}"
+          image: "docker.io/bitnami/kafka:{{ .Values.kafka.version }}"
           ports:
             - containerPort: 9092
               name: internal
