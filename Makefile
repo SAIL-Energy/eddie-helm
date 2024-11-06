@@ -7,6 +7,11 @@ template:
 	--values ./eddie-chart/values-$(NAMESPACE).yaml \
 	--debug --output-dir ./out
 
+template-plain-chart:
+	helm template ./eddie-chart \
+	--values ./eddie-chart/values.yaml \
+	--debug --output-dir ./out
+
 install:
 	helm install $(RELEASE_NAME) -n $(NAMESPACE) \
 	--values ./eddie-chart/values.yaml \

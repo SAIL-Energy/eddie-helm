@@ -6,6 +6,7 @@ Environment variable mappings for AT EDA region connector
 {{- $pontonValues := .Values.regionConnectors.atEda.pontonMessenger }}
 {{- $rcPrefix := "REGION_CONNECTOR_AT_EDA" }}
 {{- $pontonPrefix := "REGION_CONNECTOR_AT_EDA_PONTON_MESSENGER" }}
+{{- if eq $edaValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $edaValues.enabled | quote }}
 - name: {{ $rcPrefix }}_ELIGIBLEPARTY_ID
@@ -33,6 +34,7 @@ Environment variable mappings for AT EDA region connector
       name: {{ .Release.Name }}-region-connector-secrets
       key: pontonPassword
 {{- end }}
+{{- end }}
 
 {{/*
 Environment variable mappings for FR ENEDIS region connector
@@ -40,6 +42,7 @@ Environment variable mappings for FR ENEDIS region connector
 {{- define "eddie.region-connectors.fr-enedis.envs" }}
 {{- $enedisValues := .Values.regionConnectors.frEnedis }}
 {{- $rcPrefix := "REGION_CONNECTOR_FR_ENEDIS" }}
+{{- if eq $enedisValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $enedisValues.enabled | quote }}
 - name: {{ $rcPrefix }}_BASEPATH
@@ -57,6 +60,7 @@ Environment variable mappings for FR ENEDIS region connector
 - name: {{ $rcPrefix }}_POLLING
   value: {{ $enedisValues.polling | quote }}
 {{- end }}
+{{- end }}
 
 {{/*
 Environment variable mappings for DK ENERGINET region connector
@@ -64,6 +68,7 @@ Environment variable mappings for DK ENERGINET region connector
 {{- define "eddie.region-connectors.dk-energinet.envs" }}
 {{- $rcPrefix := "REGION_CONNECTOR_DK_ENERGINET" }}
 {{- $energinetValues := .Values.regionConnectors.dkEnerginet }}
+{{- if eq $energinetValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $energinetValues.enabled | quote }}
 - name: {{ $rcPrefix }}_CUSTOMER_CLIENT_BASEPATH
@@ -75,6 +80,7 @@ Environment variable mappings for DK ENERGINET region connector
 - name: {{ $rcPrefix }}_RETRY
   value: {{ $energinetValues.retry | quote }}
 {{- end }}
+{{- end }}
 
 {{/*
 Environment variable mappings for ES Datadis region connector
@@ -82,6 +88,7 @@ Environment variable mappings for ES Datadis region connector
 {{- define "eddie.region-connectors.es-datadis.envs" }}
 {{- $datadisValues := .Values.regionConnectors.esDatadis }}
 {{- $rcPrefix := "REGION_CONNECTOR_ES_DATADIS" }}
+{{- if eq $datadisValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $datadisValues.enabled | quote }}
 - name: {{ $rcPrefix }}_USERNAME
@@ -101,6 +108,7 @@ Environment variable mappings for ES Datadis region connector
 - name: {{ $rcPrefix }}_BASEPATH
   value: {{ $datadisValues.basePath | quote }}
 {{- end }}
+{{- end }}
 
 {{/*
 Environment variable mappings for US Green Button region connector
@@ -108,6 +116,7 @@ Environment variable mappings for US Green Button region connector
 {{- define "eddie.region-connectors.us-green-button.envs" }}
 {{- $greenButtonValues := .Values.regionConnectors.usGreenButton }}
 {{- $rcPrefix := "REGIONCONNECTOR_US_GREEN_BUTTON" }}
+{{- if eq $greenButtonValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $greenButtonValues.enabled | quote }}
 - name: {{ $rcPrefix }}_BASEPATH
@@ -137,6 +146,7 @@ Environment variable mappings for US Green Button region connector
     secretKeyRef:
       name: {{ $.Release.Name }}-region-connector-secrets
       key: greenButton{{ .name }}ClientSecret
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -171,6 +181,7 @@ Environment variable mappings for FI Fingrid region connector
 {{- $fingridValues := .Values.regionConnectors.fiFingrid }}
 {{- $rcPrefix := "REGION_CONNECTOR_FI_FINGRID" }}
 {{- $keystorePrefix := "SPRING_SSL_BUNDLE_JKS_FINGRID" }}
+{{- if eq $fingridValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $fingridValues.enabled | quote }}
 - name: {{ $rcPrefix }}_API_URL
@@ -201,6 +212,7 @@ Environment variable mappings for FI Fingrid region connector
     secretKeyRef:
       name: {{ .Release.Name }}-region-connector-secrets
       key: fingridKeyPassword
+{{- end }}
 {{- end }}
 
 {{/*
@@ -233,6 +245,7 @@ Environment variable mappings for NL Mijn Aansluiting region connector
 {{- $aansluitingValues := .Values.regionConnectors.nlMijnAansluiting }}
 {{- $rcPrefix := "REGION_CONNECTOR_NL_MIJN_AANSLUITING" }}
 {{- $keystorePrefix := "SPRING_SSL_BUNDLE_JKS_NL" }}
+{{- if eq $aansluitingValues.enabled "true" }}
 - name: {{ $rcPrefix }}_ENABLED
   value: {{ $aansluitingValues.enabled | quote }}
 - name: {{ $rcPrefix }}_ISSUER_URL
@@ -276,4 +289,5 @@ Environment variable mappings for NL Mijn Aansluiting region connector
     secretKeyRef:
       name: {{ .Release.Name }}-region-connector-secrets
       key: mijnAansluitingKeyPassword
+{{- end }}
 {{- end }}

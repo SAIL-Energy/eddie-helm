@@ -36,7 +36,7 @@ emqx:
 core:
   replicaCount: 1
   version: "latest"
-  jwtHmacSecret: ""
+  encryptedJwtHmacSecret: ""
   ponton:
     storageSize: "1Gi"
 
@@ -52,8 +52,8 @@ regionConnectors:
       apiEndpoint: ""
       port: ""
       folder: ""
-      username: ""
-      password: ""
+      encryptedUsername: ""
+      encryptedPassword: ""
 
   fiFingrid:
     enabled: "false"
@@ -63,18 +63,18 @@ regionConnectors:
       user: ""
     keystore:
       secretName: ""
-      password: ""
+      encryptedPassword: ""
       key:
-        alias: ""
-        password: ""
+        encryptedAlias: ""
+        encryptedPassword: ""
 
   frEnedis:
     enabled: "false"
     polling: ""
     basePath: ""
     client:
-      id: ""
-      secret: ""
+      encryptedId: ""
+      encryptedSecret: ""
 
   dkEnerginet:
     enabled: "false"
@@ -97,8 +97,8 @@ regionConnectors:
 
   esDatadis:
     enabled: "false"
-    username:
-    password:
+    encryptedUsername:
+    encryptedPassword:
     polling: ""
     retry: ""
     basePath: ""
@@ -108,31 +108,31 @@ regionConnectors:
     issuerUrl: ""
     redirectUrl: ""
     single:
-      keyId: ""
+      encryptedKeyId: ""
       scope: ""
       clientId: ""
     continuous:
-      keyId: ""
+      encryptedKeyId: ""
       clientId: ""
       scope: ""
     keystore:
       secretName: ""
-      password: ""
+      encryptedPassword: ""
       key:
-        alias: ""
-        password: ""
+        encryptedAlias: ""
+        encryptedPassword: ""
 
   usGreenButton:
     enabled: "false"
     basePath: ""
     redirectUrl: ""
     client:
-      apiToken: ""
-    webhookSecret: ""
+      encryptedApiToken: ""
+    encryptedWebhookSecret: ""
     activationBatchSize: ""
     clients:
       - id: ""
-        secret: ""
+        encryptedSecret: ""
 
   simulation:
     enabled: "false"
