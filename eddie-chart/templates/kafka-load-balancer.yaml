@@ -10,4 +10,4 @@ spec:
   ports:
     - name: kafka-load-balancer
       port: {{ .Values.kafka.externalPort }}
-      targetPort: 9094
+      targetPort: 9095
