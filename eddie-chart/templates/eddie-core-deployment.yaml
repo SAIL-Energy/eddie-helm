@@ -32,7 +32,10 @@ spec:
             - name: EDDIE_PUBLIC_URL
               value: "http://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
             - name: EDDIE_JWT_HMAC_SECRET
-              value: {{ .Values.core.jwtHmacSecret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-core-secret
+                  key: jwtHmacSecret
             - name: EDDIE_DATA_NEEDS_CONFIG_DATA_NEED_SOURCE
               value: config
             - name: EDDIE_DATA_NEEDS_CONFIG_FILE
@@ -60,6 +63,7 @@ spec:
             {{- include "eddie.region-connectors.es-datadis.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.us-green-button.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.nl-mijn-aansluiting.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.fi-fingrid.envs" . | indent 12 }}
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
