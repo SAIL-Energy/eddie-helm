@@ -4,6 +4,9 @@ ghcrImagePullSecrets:
 ingress:
   basePath: ""
   host: ""
+  tls:
+    enabled: "false"
+    certificateIssuer: ""
 
 postgres:
   replicaCount: 1
