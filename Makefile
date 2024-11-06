@@ -48,3 +48,13 @@ create-fingrid-jks-secret:
 
 create-aansluiting-jks-secret:
 	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file $(FILE_LOCATION)
+
+seal-secret:
+	yq eval '.$(VALUE)' ./eddie-chart/values-$(NAMESPACE).yaml | tr -d '\n'| kubeseal \
+			--controller-namespace $(NAMESPACE) \
+			--controller-name $(RELEASE_NAME)-sealed-secrets \
+			--raw \
+			--namespace $(NAMESPACE) \
+			--name $(RELEASE_NAME)-$(SECRET_NAME) | \
+			xargs \-I{} yq eval -i '.$(VALUE) = "{}"' \
+			./eddie-chart/values-$(NAMESPACE).yaml
