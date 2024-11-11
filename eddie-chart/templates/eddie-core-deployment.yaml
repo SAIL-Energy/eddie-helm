@@ -64,6 +64,12 @@ spec:
             {{- include "eddie.region-connectors.us-green-button.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.nl-mijn-aansluiting.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.fi-fingrid.envs" . | indent 12 }}
+            - name: KAFKA_SECURITY_PROTOCOL
+              value: "SASL_PLAINTEXT"
+            - name: KAFKA_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.core.kafkaUser.username }}' password='{{ .Values.core.kafkaUser.password }}';"
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}

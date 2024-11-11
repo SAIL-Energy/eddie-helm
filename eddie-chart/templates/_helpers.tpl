@@ -53,8 +53,19 @@ Helper to build the postgres Url
 {{- end }}
 
 {{/*
-Helper to build kafka
+Helper to construct kafka client users
 */}}
-{{- define "eddie.kafka-url" -}}
-"{{ .Release.Name }}-kafka:9094"
+{{- define "eddie.kafka-client-users" -}}
+admin;{{- range $index, $user := .Values.kafka.users -}}
+  {{- if $index }};{{ end -}}{{ $user.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper to construct kafka client passwords
+*/}}
+{{- define "eddie.kafka-client-passwords" -}}
+{{ .Values.kafka.adminPassword}};{{- range $index, $user := .Values.kafka.users -}}
+  {{- if $index }};{{ end -}}{{ $user.password }}
+{{- end }}
 {{- end }}

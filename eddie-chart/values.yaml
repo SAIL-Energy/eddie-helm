@@ -20,6 +20,7 @@ kafka:
   replicaCount: 1
   version: "3.6"
   externalPort: 9094
+  adminPassword: "admin"
   topics:
     - name: permission-market-documents
       replicationFactor: 1
@@ -27,10 +28,41 @@ kafka:
     - name: validated-historical-data
       replicationFactor: 1
       partitions: 1
+    - name: terminations
+      replicationFactor: 1
+      partitions: 1
+  users:
+    - name: eddie-core
+      password: eddie-core
+      consumeTopics:
+        - name: validated-historical-data
+          group: eddie-core
+        - name: permission-market-documents
+          group: eddie-core
+        - name: terminations
+          group: termination-group
+      produceTopics:
+        - name: validated-historical-data
+        - name: permission-market-documents
+        - name: terminations
+    - name: example-app
+      password: example-app
+      consumeTopics:
+        - name: validated-historical-data
+          group: example-app-vhd
+        - name: permission-market-documents
+          group: example-app-status
+      produceTopics:
+        - name: validated-historical-data
+        - name: permission-market-documents
+        - name: terminations
 
 exampleApp:
   replicaCount: 1
   version: "latest"
+  kafkaUser:
+    username: "example-app"
+    password: "example-app"
 
 emqx:
   replicaCount: 1
@@ -42,6 +74,9 @@ core:
   encryptedJwtHmacSecret: ""
   ponton:
     storageSize: "1Gi"
+  kafkaUser:
+    username: "eddie-core"
+    password: "eddie-core"
 
 regionConnectors:
   atEda:

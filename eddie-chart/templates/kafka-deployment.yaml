@@ -24,6 +24,9 @@ spec:
               name: cluster
             - containerPort: 9095
               name: external
+          volumeMounts:
+            - name: kafka-security-config-volume
+              mountPath: /etc/kafka/
           env:
             # KRaft settings
             - name: KAFKA_CFG_NODE_ID
@@ -34,15 +37,15 @@ spec:
               value: "0@localhost:9093"
             # Listeners
             - name: KAFKA_CFG_LISTENERS
-              value: "PLAINTEXT://:9092,CONTROLLER://:9093,CLUSTER://:9094,EXTERNAL://:9095"
+              value: "INTERNAL://:9092,CONTROLLER://:9093,CLUSTER://:9094,EXTERNAL://:9095"
             - name: KAFKA_CFG_ADVERTISED_LISTENERS
-              value: "PLAINTEXT://localhost:9092,CLUSTER://{{ .Release.Name }}-kafka:9094,EXTERNAL://{{ .Values.ingress.host }}:9095"
+              value: "INTERNAL://localhost:9092,CLUSTER://{{ .Release.Name }}-kafka:9094,EXTERNAL://{{ .Values.ingress.host }}:9095"
             - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "CONTROLLER:PLAINTEXT,CLUSTER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT"
+              value: "INTERNAL:SASL_PLAINTEXT,CONTROLLER:SASL_PLAINTEXT,CLUSTER:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT"
             - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
               value: "CONTROLLER"
             - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
-              value: "PLAINTEXT"
+              value: "EXTERNAL"
             # Big messages produced for validated historical data
             # See: https://stackoverflow.com/questions/63528508/recordtoolargeexception-in-kafka
             - name: KAFKA_CFG_SOCKET_RECEIVE_BUFFER_BYTES
@@ -53,6 +56,28 @@ spec:
               value: "104857600"
             - name: KAFKA_CFG_MESSAGE_MAX_BYTES
               value: "104857600"
+            - name: KAFKA_CFG_SASL_ENABLED_MECHANISMS
+              value: "SCRAM-SHA-512,PLAIN"
+            - name: KAFKA_CFG_SUPER_USERS
+              value: "User:admin"
+            - name: KAFKA_CLIENT_USERS
+              value: "{{- include "eddie.kafka-client-users" . }}"
+            - name: KAFKA_CLIENT_PASSWORDS
+              value: "{{- include "eddie.kafka-client-passwords" . }}"
+            - name: KAFKA_OPTS
+              value: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+            - name: KAFKA_CFG_AUTHORIZER_CLASS_NAME
+              value: "org.apache.kafka.metadata.authorizer.StandardAuthorizer"
+            - name: KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL
+              value: "PLAIN"
+            - name: KAFKA_CFG_SASL_MECHANISM_EXTERNAL_PROTOCOL
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_CONTROLLER_USER
+              value: "admin"
+            - name: KAFKA_CONTROLLER_PASSWORD
+              value: "{{ .Values.kafka.adminPassword }}"
           lifecycle:
             postStart:
               exec:
@@ -61,24 +86,24 @@ spec:
                   - -c
                   - |
                     # Block until Kafka is available
-                    kafka-broker-api-versions.sh --bootstrap-server=localhost:9092
+                    kafka-topics.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties --list
 
                     {{- range .Values.kafka.topics }}
-                    kafka-topics.sh --bootstrap-server=localhost:9092 --create --if-not-exists --topic {{ .name }} --replication-factor {{ .replicationFactor }} --partitions {{ .partitions }}
+                    kafka-topics.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties --create --if-not-exists --topic {{ .name }} --replication-factor {{ .replicationFactor }} --partitions {{ .partitions }}
                     {{- end }}
-          readinessProbe:
-            tcpSocket:
-              port: 9092
-            timeoutSeconds: 5
-            periodSeconds: 5
-            initialDelaySeconds: 30
-            failureThreshold: 5
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "kafka-broker-api-versions.sh --bootstrap-server=localhost:9092"
-            timeoutSeconds: 5
-            periodSeconds: 5
-            initialDelaySeconds: 30
+
+                    {{- range .Values.kafka.users }}
+                      {{- $user := . }}
+                      {{- range .consumeTopics }}
+                    kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
+                                  --add --allow-principal "User:{{ $user.name }}" --consumer --topic "{{ .name }}" --group "{{ .group }}" --resource-pattern-type prefixed
+                      {{- end }}
+                      {{- range .produceTopics }}
+                    kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
+                                  --add --allow-principal "User:{{ $user.name }}" --producer --topic "{{ .name }}" --resource-pattern-type prefixed
+                      {{- end }}
+                    {{- end }}
+      volumes:
+        - name: kafka-security-config-volume
+          configMap:
+            name: kafka-security-configmap
