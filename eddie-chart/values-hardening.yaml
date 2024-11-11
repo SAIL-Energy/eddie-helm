@@ -7,24 +7,25 @@ ingress:
     enabled: "false"
 
 postgres:
+  replicaCount: 1
   encryptedUsername: "AgAYwYdHC+8mvme7wgKRHqyUM75f9fPhZzNo9WcVagMVTpPBLgQ2RpxMl8ns3353CX+s70si3aXTv5oTkBV6bp6HiCPdKoNPErXPnFCs8vNdwHYj7gyscqXVlblnpIOzT4o5cii/JN3GN9CjTRBptKaHC3TMa5cY0pJT9+McC7QUGldDB17AG7PQxR2l2oONsOcRwIzV4Gvyi0brCjuDPhNT5EwGEYaJEqNyhAn8KYR2TE8qvPWizNALZE/UEFlFL+sREWRe5G7Nj+EysbJadjd5+kKYCC35O5MLLneRLonBebk4RzGyX3tZJGjxY2PKx3Kwexvy6jMvf7Ybo5CrJKmYxkgMbtTJZlCEaFYrJYI6ahL33k+Wb55xh5QLCtOCb6wAwABwNRH64AkQ7r5hiJWCKBpUZYHH+h0uuOBJ+zOV/FDA8ddz1D5BGye51rcphcEaXyqTblFW3M2e278ajk4Qdx/cqg4fFZqtfU3ue3vVSCkKmrBJRyheULC2yoUHrO5uaVQm8Tm8JZnJtdQ/7jhykngCXb5VTLdy640uF+dHMHt2UZLOF/5Z2ZTcXu1Z0F4KoNfHev4S1Pf91UfTtJEqBgtgr+O9eIb5K36WPNDIJ9Jq6Qz1I1sehG9ibdK3nOReFcj9chYea2eZI6a6MmVhZ6Rjdo6PUwSliKY1Gp19fEWVK4Q+pNsLHdpcO+5FEyylWO+2"
   encryptedPassword: "AgBkPm9Ve+iwBqb4AmGsQs+VrAJ5BwV9mLyJWn9pHDakwGnfcX61vMdMYJqXCHMc76w7sC/bHzGH3Ka32W4ZjLpxQ14u4dyTzEJJcnmS6oc/GX3PK1yY3XHDtVyaVKeU7T7X2fzdgMX1tTGse08rO2/6Meu/FFqIL7ESv5zbd//mofqk9FeaY6+MWnnuIQ5ynSlLUTbgyhPvpUCHDbAQvc1IlLMZaZfEJpkwgmzL3mFWY4fcbMG+lEKJNEWoDWHSLq5yzxMZWSuWxX4JOFOnWd2jazexKjNj7qMdsyzBpqrk08VqcE57iGFgxqqF3ydpu22iw5BdKvl5fHziAIy7poRDfFZUEM+rJXPR33M9kGjT2IgjlOud+o9gJUaWV2lKKkqHhiSJ0y/RCdyVtTzwBEnRnBATOp0LG1i0Xn/7Ux7OVPmbI/1ybxcBBcQiKTnDMEbPrNJ/bnxRXQlWYwMsVNJStbBswONRL/D9vCYUlOBFqCUZ4HV6ALLSqp73EHMTpN6Q4R8I8RErcjH5IN3kApt8TSGk/nvytz00aP3OvmRQcn6BqabXmTZf1CExNmvB3Y8nC64yuaWjF5fy7DIyDJI0IQGInLILQUaNiL7OVZ7+Bw61HPEu4rqDWt0QBhstmm06Q1Crs2UUQympeQzYt1uw+D45wzuliNzG/Z+ZFgH82HrLREg0VeogRwLrCRZ043+OKw9y"
 
 kafka:
+  replicaCount: 1
   externalPort: 9095
-  topics:
-    - name: permission-market-documents
-      replicationFactor: 1
-      partitions: 1
-    - name: validated-historical-data
-      replicationFactor: 1
-      partitions: 1
+  adminPassword: "supersecretadmin"
+
+exampleApp:
+  replicaCount: 1
+  version: "SNAPSHOT-1-11-11-24"
 
 emqx:
   replicaCount: 0
 
 core:
   replicaCount: 1
+  version: "latest"
   encryptedJwtHmacSecret: "AgA0+rrAa2F+yXkHUHZa8aoWhaQenkwY8EW8bCbxnJM3BVQx646c37FP6a3LJJ+cN1kaHEgRBVSXKEiLzIf4sQdl1vJJPXA31uo0o9FG3peX5CsC/MQjXs0OBtNTTBPPpwiH4t1eWVU5KSAc71EiRQbJmovYvEofatPmavNasAzdCqjDat5CBb0lvM4suAV+L/GplWq0TzcdM6aBCvrBAf1v81+B+G283pBuVG5w/2e3gzRTnO0JUqAOB8+J7G2pwzD9YwK8QoMFWjL2NUjZsUod8kYt9fFxf6WMxVbjGpez6x+y1qLNycQYHutNb6D9IFhzMT8ELjWKy1S2EY2/Z8y48TmvJNV5lz/bREZArcGlAwG1rn2LKhWWWjT9B0PQ209fidIkOiPTI1YQ+pBalbRiM2VrmEEwMbR8l2unLygZCFKrKnZvkp1+E1x2r/b1zkghShGBhzgqz9PdJVQqRTTuTOkRv9hPm8DfwB0WkKUQz+PEMY6Z6E05xTSExf17c2XAo+U+isjzzsFzMizYtf3nlCFeKhyACXgH9cfDPwUAa3uoe9Nagh/2/JPwD0Ehc7K8A5tNqfFwb3PDrujqxH0hNarZY7/yaghz9omn5hjqhk/2pSoYPoa4defcHYv3OQpSriOviLjm/LBPocxC25ZSZKACzn3rB+lXdLZmFJUFNpDoTU8jksGO+pnFNb0/3CTYRlwh9ykOgK0L+G6aFf8UavM9fhokAI94YXqisksu9l9TEOnn564dvNt3Gw=="
 
 regionConnectors:
@@ -72,7 +73,7 @@ regionConnectors:
       encryptedSecret: "AgAMu0JAFfh1Aw3zNrqJddlW7zt8C6Tmk+OFr0pdIYMBHexRp2m4htSwH34ZLFTK8BE+UcKLAC/JXUgvfRw60zo8UZbFOsfSy6toZgYjJHW+4mYStrrKQ/aL2J14kOq+kD6i4qqnCaiZA/XRlWDZ6zQEL6BEH9yR8WEZO5tGGxniRfaEJdhwM/texUTISg39x7TFLiA/Pgzr2EcYmGcRam0FCPI+qMley0bAHw9MXg82aGhyg3+mMHh2wxwfBOcxeIs2ZgZo9447KpidbpXfB7XQOWR+7RX+sXYZopyWFkJKFbcHF8bn+8ue5aveDMs93h7EgnMNMi6DLY0vIxp3w5i6efKVTs6rlWlkyvTD189ZovGe4KfsETaZXsUbEcslXC7rSU9fTvasVW26dfO6+LcZ61fYkQp63e68V565IAIj8QErmPyIO/wjrdEQSYyV+KuL6/eH1v0CcNqii7ctFK5qch15slwa14d93Sl32ajseG+k9WhFqbQk3Np+iAb5G8MAtl7ktEA6EnKvDyev1ydtgfG8BAgm2UVibwNHbTD8Wg+vSrN7l4HbLM6NTqs3D+pnYvmH9J077OjklmFer0P+mVqHadcX5jI27NubsVVEZzpaSlsHqx+vsdzZXE6j6myqQqvMLslEU6+6zOyNcQynK4Yjw2JjCPMIRyRvi0hQS4+tjkR+Eob+Rg8moIFlD9f7GPBO7Is4buzNQXnezDdl9Mp8X9tkxqmO5Lfv"
 
   nlMijnAansluiting:
-    enabled: "true"
+    enabled: "false"
     issuerUrl: "https://www.acc.mijnenergiedata.nl/autorisatieregister"
     redirectUrl: "https://eddie.projekte.fh-hagenberg.at/region-connectors/nl-edsn/authorization-callback"
     single:

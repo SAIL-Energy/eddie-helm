@@ -6,3 +6,6 @@
 
 # Helm Templating Outputs
 /out
+
+# For local cluster setup
+eddie-chart/values-hardening.yaml
