@@ -21,6 +21,8 @@ kafka:
   version: "3.6"
   externalPort: 9094
   adminPassword: "admin"
+  truststorePassword: ""
+  keystorePassword: ""
   topics:
     - name: permission-market-documents
       replicationFactor: 1
