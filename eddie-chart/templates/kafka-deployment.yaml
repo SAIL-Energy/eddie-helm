@@ -27,6 +27,11 @@ spec:
           volumeMounts:
             - name: kafka-security-config-volume
               mountPath: /etc/kafka/
+            - name: kafka-ssl-stores
+              mountPath: /opt/bitnami/kafka/config/certs/
+              readOnly: true
+            - name: kafka-data
+              mountPath: /bitnami/kafka/data/
           env:
             # KRaft settings
             - name: KAFKA_CFG_NODE_ID
@@ -41,7 +46,7 @@ spec:
             - name: KAFKA_CFG_ADVERTISED_LISTENERS
               value: "INTERNAL://localhost:9092,CLUSTER://{{ .Release.Name }}-kafka:9094,EXTERNAL://{{ .Values.ingress.host }}:9095"
             - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
-              value: "INTERNAL:SASL_PLAINTEXT,CONTROLLER:SASL_PLAINTEXT,CLUSTER:SASL_PLAINTEXT,EXTERNAL:SASL_PLAINTEXT"
+              value: "INTERNAL:SASL_PLAINTEXT,CONTROLLER:SASL_PLAINTEXT,CLUSTER:SASL_PLAINTEXT,EXTERNAL:SASL_SSL"
             - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
               value: "CONTROLLER"
             - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
@@ -78,6 +83,16 @@ spec:
               value: "admin"
             - name: KAFKA_CONTROLLER_PASSWORD
               value: "{{ .Values.kafka.adminPassword }}"
+            - name: KAFKA_CFG_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-kafka-secret
+                  key: keystorePassword
+            - name: KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-kafka-secret
+                  key: truststorePassword
           lifecycle:
             postStart:
               exec:
@@ -107,3 +122,10 @@ spec:
         - name: kafka-security-config-volume
           configMap:
             name: kafka-security-configmap
+        - name: kafka-ssl-stores
+          secret:
+            secretName: {{ .Values.kafka.sslStores.secretName }}
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-kafka-pvc
+
