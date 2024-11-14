@@ -21,6 +21,17 @@ install:
 remove:
 	helm uninstall -n $(NAMESPACE) $(RELEASE_NAME)
 
+standby:
+	helm upgrade -n $(NAMESPACE) $(RELEASE_NAME) \
+	--values ./eddie-chart/values.yaml \
+	--values ./eddie-chart/values-$(NAMESPACE).yaml \
+	--set kafka.replicaCount=0 \
+	--set core.replicaCount=0 \
+	--set exampleApp.replicaCount=0 \
+	--set emqx.replicaCount=0 \
+	--set postgres.replicaCount=0 \
+	./eddie-chart
+
 upgrade:
 	helm upgrade -n $(NAMESPACE) $(RELEASE_NAME) \
 	--values ./eddie-chart/values.yaml \
@@ -53,6 +64,14 @@ create-fingrid-jks-secret:
 
 create-aansluiting-jks-secret:
 	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file $(FILE_LOCATION)
+
+create-ssl-stores-secret:
+	kubectl -n $(NAMESPACE) create secret generic $(RELEASE_NAME)-kafka-ssl-stores \
+	--from-file=kafka.keystore.jks=$(KEYSTORE_LOCATION) \
+	--from-file=kafka.truststore.jks=$(TRUSTSTORE_LOCATION)
+
+create-kafka-truststore-secret:
+	kubectl -n $(NAMESPACE) create secret generic kafka-server-truststore --from-file $(FILE_LOCATION)
 
 seal-secret:
 	yq eval '.$(VALUE)' ./eddie-chart/values-$(NAMESPACE).yaml | tr -d '\n'| kubeseal \
