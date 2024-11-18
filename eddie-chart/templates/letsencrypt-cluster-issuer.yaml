@@ -3,7 +3,8 @@ apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: {{ .Release.Name }}-letsencrypt-prod
-  {{- include "eddie.labels" . | indent 2 }}
+  labels:
+  {{- include "eddie.labels" . | indent 4 }}
 spec:
   acme:
     email: {{ .Values.ingress.tls.letsEncryptProd.email }}
