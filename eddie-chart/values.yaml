@@ -3,7 +3,7 @@ ghcrImagePullSecrets:
 
 ingress:
   basePath: ""
-  host: ""
+  host: "localhost"
   tls:
     enabled: "false"
     certificateIssuer: ""
@@ -18,11 +18,16 @@ postgres:
 
 kafka:
   replicaCount: 1
+  storageSize: "5Gi"
   version: "3.6"
   externalPort: 9094
   adminPassword: "admin"
-  truststorePassword: ""
-  keystorePassword: ""
+  sslStores:
+    secretName: ""
+    keystore:
+      encryptedPassword: ""
+    truststore:
+      encryptedPassword: ""
   topics:
     - name: permission-market-documents
       replicationFactor: 1
