@@ -59,7 +59,7 @@ eddie-example-app-forward:
 	kubectl port-forward -n $(NAMESPACE) svc/$(RELEASE_NAME)-example-app 8082:8081
 
 create-ghcr-secret:
-	kubectl -n $(NAMESPACE) create secret docker-registry $(RELEASE_NAME)-ghcr-secret \
+	kubectl -n $(NAMESPACE) create secret docker-registry ghcr-secret \
 	  --docker-server=ghcr.io \
 	  --docker-username=${CR_USERNAME} \
 	  --docker-password=${CR_PAT}
@@ -71,7 +71,7 @@ create-aansluiting-jks-secret:
 	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file $(FILE_LOCATION)
 
 create-ssl-stores-secret:
-	kubectl -n $(NAMESPACE) create secret generic $(RELEASE_NAME)-kafka-ssl-stores \
+	kubectl -n $(NAMESPACE) create secret generic kafka-ssl-stores \
 	--from-file=kafka.keystore.jks=$(KEYSTORE_LOCATION) \
 	--from-file=kafka.truststore.jks=$(TRUSTSTORE_LOCATION)
 
