@@ -27,9 +27,11 @@ spec:
           volumeMounts:
             - name: kafka-security-config-volume
               mountPath: /etc/kafka/
+            {{- if .Values.kafka.sslStores.secretName }}
             - name: kafka-ssl-stores
               mountPath: /opt/bitnami/kafka/config/certs/
               readOnly: true
+            {{- end }}
             - name: kafka-data
               mountPath: /bitnami/kafka/data/
           env:
@@ -125,9 +127,11 @@ spec:
         - name: kafka-security-config-volume
           configMap:
             name: kafka-security-configmap
+        {{- if .Values.kafka.sslStores.secretName }}
         - name: kafka-ssl-stores
           secret:
             secretName: {{ .Values.kafka.sslStores.secretName }}
+        {{- end }}
         - name: kafka-data
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-kafka-pvc
