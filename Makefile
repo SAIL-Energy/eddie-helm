@@ -59,9 +59,9 @@ eddie-example-app-forward:
 	kubectl port-forward -n $(NAMESPACE) svc/$(RELEASE_NAME)-example-app 8082:8081
 
 create-ghcr-secret:
-	kubectl -n $(NAMESPACE) create secret docker-registry ghcr-secret \
+	kubectl -n $(NAMESPACE) create secret docker-registry $(RELEASE_NAME)-ghcr-secret \
 	  --docker-server=ghcr.io \
-	  --docker-username=benjaminellmer \
+	  --docker-username=${CR_USERNAME} \
 	  --docker-password=${CR_PAT}
 
 create-fingrid-jks-secret:
