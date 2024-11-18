@@ -80,7 +80,7 @@ create-kafka-truststore-secret:
 
 seal-secret:
 	yq eval '.$(VALUE)' ./eddie-chart/values-$(NAMESPACE).yaml | tr -d '\n'| kubeseal \
-			--controller-namespace $(NAMESPACE) \
+			--controller-namespace eddie-config \
 			--controller-name $(RELEASE_NAME)-sealed-secrets \
 			--raw \
 			--namespace $(NAMESPACE) \
