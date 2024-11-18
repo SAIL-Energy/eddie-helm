@@ -100,6 +100,9 @@ spec:
                   - sh
                   - -c
                   - |
+                    # Temporary Solution
+                    rm /bitnami/kafka/data/.lock
+
                     # Block until Kafka is available
                     kafka-topics.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties --list
 
