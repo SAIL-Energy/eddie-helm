@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
   annotations:
   {{- if eq .Values.ingress.tls.enabled "true" }}
-    cert-manager.io/cluster-issuer: {{ .Values.ingress.tls.certificateIssuer }}
+    cert-manager.io/cluster-issuer: {{ .Release.Name }}-letsencrypt-prod
   {{- end }}
 
 spec:

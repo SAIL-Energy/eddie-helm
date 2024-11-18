@@ -54,6 +54,7 @@ spec:
                   key: password
             - name: SERVER_SERVLET_CONTEXT_PATH
               value: /{{ .Values.ingress.basePath }}/eddie
+              value: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/eddie
             - name: KAFKA_BOOTSTRAP_SERVERS
               value: "{{ .Release.Name }}-kafka:9094"
             - name: REGION_CONNECTOR_SIM_ENABLED
