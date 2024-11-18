@@ -1,5 +1,5 @@
-RELEASE_NAME=eddie
-NAMESPACE=hardening
+RELEASE_NAME?=eddie
+NAMESPACE?=hardening
 
 template:
 	helm template ./eddie-chart \
