@@ -16,6 +16,11 @@ install:
 	helm install $(RELEASE_NAME) -n $(NAMESPACE) \
 	--values ./eddie-chart/values.yaml \
 	--values ./eddie-chart/values-$(NAMESPACE).yaml \
+	--set kafka.replicaCount=0 \
+	--set core.replicaCount=0 \
+	--set exampleApp.replicaCount=0 \
+	--set emqx.replicaCount=0 \
+	--set postgres.replicaCount=0 \
 	./eddie-chart
 
 remove:
