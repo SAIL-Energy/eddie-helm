@@ -30,7 +30,7 @@ spec:
               name: outbound
           env:
             - name: EDDIE_PUBLIC_URL
-              value: "{{ if .Values.ingress.tls }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
+              value: "{{ if .Values.ingress.tls.enabled }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
             - name: EDDIE_JWT_HMAC_SECRET
               valueFrom:
                 secretKeyRef:
