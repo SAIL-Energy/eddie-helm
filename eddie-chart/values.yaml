@@ -2,15 +2,14 @@ sealed-secrets:
   namespace: "eddie-config"
 
 ghcrImagePullSecrets:
-  name: ""
+  name: "ghcr-secret"
 
 ingress:
   basePath: ""
   host: "localhost"
   tls:
     enabled: "false"
-    letsEncryptProd:
-      email: ""
+    clusterIssuer: ""
 
 postgres:
   replicaCount: 0
