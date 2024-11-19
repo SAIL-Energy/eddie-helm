@@ -1,6 +1,3 @@
-sealed-secrets:
-  namespace: "eddie-config"
-
 ghcrImagePullSecrets:
   name: "ghcr-secret"
 
