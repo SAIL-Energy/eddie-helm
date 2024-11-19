@@ -1,0 +1,104 @@
+sealed-secrets:
+  namespace: "d4g"
+  fullnameOverride: "sealed-secrets-controller-d4g"
+  rbac:
+    create: true
+    clusterRoleName: "d4g-secrets-unsealer"
+ingress:
+  host: "eddie-worker.projekte.fh-hagenberg.at"
+  basePath: "d4g"
+  tls:
+    enabled: "true"
+    clusterIssuer: "letsencrypt-prod"
+postgres:
+  replicaCount: 1
+  encryptedUsername: "AgA4VPsmdGrpXMuczxIMJNPrq6PuPbWJSlZM38lN0Shwjuv8NftfZI/yzzTwn9jHl+bHGVsjrBI3rJ6XMI+WcSC8PrnR52t4lZ92x8wKWVZq3adivHVT8E0iO7EVI8Hk5Q98dMc2GjjRO7li/XedO/fC1iYyeT1G0hf0HaYQTG4VJlZCgyGTyGai8EDft08NiOBh1t59WSVkUsyubKjgpg55OYHQB9Zce7vTdQ5DrWPzOVp6K2io/b3XDrcOy27G2uXXrXX3yAxjNHwapRkA0A84Lctvu+7RzR35TbL5uhFRkOlW5kd3+fkqGtp3o68jxeuPehFOYch12H+ZZK0YpPmbso07BIP/scH6OCght2jPD6spF3KnpvczAvFMW+0C/b9LVAZj3WIfm9InI14zHyL2b5mbjCUFJddkArkMRSABROTW0KY4b15dhCRY7P9pD00Ow6eM9oTOS7wJhYEf+Glw8W27n9vEDjYlSiIsopL+h6Hpe9EB3Z/xvKZXvesCElk16KtRb9KgIo8PbBAn7YbBlcMTGiRmbCbTU3H8azxr+QsoDGg+WSmlO66osSLCPxWGqRR2jmIGPuLprDa+7wZIONmGqpSMmdSpId8JglncgR5/7hTQPzf/s8rJctzqDk2Fpho1Ohd2Vclwklwjt5bxC5qK2jlEHKLu5LNfoq2Yjd8pEy8Dmq9o6vK5bnGbENkHRGMXGg=="
+  encryptedPassword: "AgAS+M/674oVKLca7mM3/5fojB5RiyZ19t+kwzW4Qo50v2QRnzS+GrXywKNpQU0f6Vdl+JIajkPa6FW5OWVNeGEsX4Zk5/LE1WQBWjmth+0v8se02Nyf5nHvcjF2QSztj3JKnkJbzXzTub4Rg+IakEhfV+M1NPjCyyEfKUJJMcAjf97qI++tP5ZcIYnGHjSpagujQWpT3QxCk6+kxwwkPpJ0+yOkndXGwkLf1rP8wh8WIg3eviwl8y+u2R8JjxKNftmwqiypGwBQQtUh2FvpfyQMhw+hb87oool0+Pf3lB0GZPR7gfeXZXD8ecT7Vh3sBJ/OzPABmeh6a4bogDe0797i7neRvABQuFvKnwZtIeYRH4eZCV9WdGU92B95SH7R61hllQKFvEcsrjlSbk0lM68ktRDyTIPxGrzosTAnIVwiCw618JT1/DOU/Q6r4JP0M0Tl+UZpV5ehbsCJIXuhnnmWvlipxuFMenbe6pDwi0XE6cMudtx/eMah71XdQqFqeEwnkbSRVgOJk0+4zUQJUg009arAawRunNeQblIKGyW8zx7483CMV+srWiBGgZhe43cfyRkk/+Vlv39B9w2q24jedQ1lVHqAO/D2x2sLt00ZkF3ArrfGnWdX4BlO7yWViwO3pfPgd5ymWmaRir/SYJAXPQc5bv5I5ohk/R8Ee/FzJJkuFouGL0mshLev2D8zjXPRs8bbve6uGj33qknvuQ=="
+kafka:
+  replicaCount: 1
+  externalPort: 5002
+  adminPassword: "14o1e2cuT1Ylz7"
+  sslStores:
+    secretName: "kafka-ssl-stores"
+    keystore:
+      encryptedPassword: "AgAXbUTqrp41oPw2dFhxbWDOs2pupbUpxBENCLosnTKbKIqg0EOORDY8eLQChoApH5NCi+sbwNReo6j54RrAM3xy7ymQ5/4fiVj6zG1cT438M0kYCwCJcS3IXNEeelZIixV8Sb26Ken/C4Vqq2bQiFOxLXkWF0njYOgK5C/rpMIX82NvLecoIGrUbkk6HJJOXHeNvOEgG0ImqAv9qFsNSi85L/VnLFhRhhq2Ve61Oit78XDNzp5KcYRT0VssY2HsOTXyF0gXDmPErEFmGXeMkWmIBFp56RN9spyKV3QtWmBLipF3/bOQOz/jCcq+qZupnCMb67hivxKEt4Var1J9BoiPK7LtbF8Cx2X+Ao6lWEYKaziE6S0sBjvNEnXyXo9m0ObSwlZx0+q7VjOt8DUT3RuZUlEyKG4Zalq4lLbRaEh9UDxlT1PskDhb0CYAR/KImBDvZnF/jDba8+BSJ7/APR+RzELsFfWwWcDzPdnZlhNyTzyPZhJ4Gnk9ntVECKykDhvEsV+auNmBvbt1zil1OnS8m0O048fV59lnl+Mk4ku7olG65EvTLcBrkTya6bZ8MrDX9G8IhqnUIPl6rjURjNj3eqTnW+JJX8TdKBy7Cduus3bCP2T4pWwDmPTToeOTTist87ONd2pgtcZks1I0Vwx58hw+8/hYcwKBiP0fioPxN/O3wHYZnCUdjn+7CsVhAOM75VpuleynB10GQsTRfQ=="
+    truststore:
+      encryptedPassword: "AgCQ9knTA/ygd2xeaJTmZcMjxhudAEwf67v4OM/lzLYIQoqHEIZtp8dk6T9is1WuIowSgN2X33pU8MxP+KWG/sMJ7VkTeNzUwyBJ3yjn6Fq6ESHleo0WkhmIIPncOghlOdg0p38CPKYT8tIA2UMsDeyin1Bw+KIpSkuCj5NLJ46jR/YFgi48sp+9P2cjo+ehOEiGfMlbrslhivCHZ1sdX1mChGsy5166gRq/xj1MuKFO09QOzf4i+5E/KaMSQtIMLgXfPJkViCKhV8CoQiNISpX1r8wfphAwR4xAv+Ncfp6d5K+DDRJzQ+HsBbILz/nkQb4Sv/yfWYQM4kc0xpNsUZ93+C54o7Ge4a+7GfeMSomucUVwuipvPFg9HCqHa9lBeeVemMFRBQlPxd4r34R3x1GOXuKSOSDBsbQMu9UMvyXHmZnLYjvf0wjoBeXKUMS7edl53OxSLlZgy6UrjDdypcP9mYQwUWqJOR6E38m9F0mAw1cSNo5OZCMn+HOOaoUYKzgNBXnZwJAtuuvX+yhFgW8G3NTs58whaqNaWrCGQOOFuSqIO3j6wwUrp/SOkw9oNmjrJcpZ6jFTruh5dEcvfj4KesZkKHrrrBORugKeEcpESS3GTUEXs9JOVMS0iT444w4zZMYBp4zBbr9md42CfQRNi5mwl1ZGKHYoKIByiGipkouFl2s591X+TuCIXUdTjXsPzo4Ujckm4Tytl8DQ/Q=="
+core:
+  replicaCount: 1
+  encryptedJwtHmacSecret: "AgB/a0MEe3BoexfQng13YDPDdeF2nN7gSSMB5GiebI4F2ItEd8UTih/d00jc4D4Kb2eeqm/8bmsvhH86P7jmeBDyuN/0zEumuzXbg9WZsHEdNpuwzoIDk1x/7ptlUUzFcyRmbf9TxArDPlg4njNQuF0BcSQsJsuRLI8Hb6BSr44V9Zs1Yj0dssLwaRKYEhzfL4WI7azBNX7bWf+Ws9erBJ1vTwhB1pcxvX31HUMZejbGe08x4LiPq/rjoZMGK0zDm2MjTjh/qj3Ey92jRC1XqrUM4yo0olKNV4ybRFRTaeg4uLHsPuEHsyLyjpZx1YdIgn7XyC993UjgfKhMC3zLQAxHW6CkJlYXmERPm2DS4gG2b+2/GcmbONbKFtQEKU74PwwThhoUZ6fU6cFEvo5CdXd9jo0zEK5BSBTBeKHjY7UoY0v0YexXv4iWSwKFSrbdBKcdLGrqubV/+dIYDZsVBAvi44bfauJAM8o0d9kt6GYpOnPDa6eINvu2A5Vn/Tx+sXW7Dvy92mmNB26gDFEoAQWsa4Nm1lOl8tpX0XxSLOVg8KTiheeiUp2HJ8/XTVn+XI4xFKG4iHjjuMpmzpX3pJFOxbOdwDdUlTKf7YDoTLTS8TawoZf7bOzBDfY6nmHUlHOxtKMjoeoghEdQ1nA8AiYKMUECWhcjGuBNo41Qj7XYwHHiEctxtIpt6qES1epfNqfF3sJ0ucoMQOKpHLUChPsJeyg9j0WP5SpAJqZ5M/Mm/WBzZ+UMloQKovHoCQ=="
+exampleApp:
+  replicaCount: 1
+  version: "SNAPSHOT-1-11-11-24"
+regionConnectors:
+  atEda:
+    enabled: "false"
+    eligiblePartyId: "EP100369"
+    pontonMessenger:
+      adapter:
+        id: "EDDIE-Flexidao-Adapter"
+        version: "1.0.0"
+      hostname: "eddie.projekte.fh-hagenberg.at"
+      apiEndpoint: "http://eddie.projekte.fh-hagenberg.at:8443/api"
+      port: "2600"
+      folder: "/opt/ponton"
+      encryptedUsername: ""
+      encryptedPassword: ""
+  esDatadis:
+    enabled: "false"
+    encryptedUsername: ""
+    encryptedPassword: ""
+    polling: "0 0 17 * * *"
+    retry: "0 0 * * * *"
+    basePath: "https://datadis.es/"
+  fiFingrid:
+    enabled: "false"
+    apiUrl: "https://dh-fingrid-cert01-b2b.azurewebsites.net/rest/FGR/"
+    organisation:
+      name: "FHOOE"
+      encryptedUser: ""
+    keystore:
+      secretName: "fingrid-jks"
+      encryptedPassword: ""
+      key:
+        encryptedAlias: ""
+        encryptedPassword: ""
+  frEnedis:
+    enabled: "false"
+    polling: "0 18 14 * * *"
+    basePath: "https://ext.prod.api.enedis.fr"
+    client:
+      encryptedId: ""
+      encryptedSecret: ""
+  nlMijnAansluiting:
+    enabled: "false"
+    issuerUrl: "https://www.acc.mijnenergiedata.nl/autorisatieregister"
+    redirectUrl: "https://eddie.projekte.fh-hagenberg.at/region-connectors/nl-edsn/authorization-callback"
+    single:
+      encryptedKeyId: ""
+      clientId: "eddie-continuous"
+      scope: "24_maanden_dagstanden"
+    continuous:
+      encryptedKeyId: ""
+      clientId: "eddie-single"
+      scope: "consumption_data"
+    keystore:
+      secretName: "aansluiting-jks"
+      encryptedPassword: ""
+      key:
+        encryptedAlias: ""
+        encryptedPassword: ""
+  usGreenButton:
+    enabled: "false"
+    basePath: "https://utilityapi.com"
+    redirectUrl: "http://eddie.projekte.fh-hagenberg.at:5030"
+    client:
+      encryptedApiToken: ""
+    encryptedWebhookSecret: ""
+    activationBatchSize: "1"
+    clients:
+      - name: "DEMOUTILITY"
+        encryptedId: ""
+        encryptedSecret: ""
+  simulation:
+    enabled: "true"
