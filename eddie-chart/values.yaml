@@ -44,6 +44,9 @@ kafka:
     - name: raw-data-in-proprietary-format
       replicationFactor: 1
       partitions: 1
+    - name: status-messages
+      replicationFactor: 1
+      partitions: 1
   users:
     - name: eddie-core
       password: eddie-core
@@ -58,6 +61,9 @@ kafka:
         - name: validated-historical-data
         - name: permission-market-documents
         - name: terminations
+        - name: accounting-point-market-documents
+        - name: raw-data-in-proprietary-format
+        - name: status-messages
     - name: example-app
       password: example-app
       consumeTopics:
