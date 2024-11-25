@@ -146,6 +146,14 @@ dependencies {
 
 This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework e.g. spring boot:
 ```java
+package energy.eddie.demodeployment;
+
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.List;
+import java.util.Properties;
+
 public class Main {
     public static final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
@@ -175,36 +183,78 @@ First of all you have to add this package to your NuGets:
 
 This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework:
 ```cs
-public static void Main()
+using Confluent.Kafka;
+
+namespace CsDemoExample;
+
+internal static class Program
 {
-    var consumerConfig = new ConsumerConfig
+    public static void Main()
     {
-        // General
-        BootstrapServers = "eddie-worker.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
-        GroupId = "univie-kafka-client-group", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
-        ClientId = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+        var consumerConfig = new ConsumerConfig
+        {
+            // General
+            BootstrapServers = "eddie-worker.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
+            GroupId = "univie-kafka-client-group", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+            ClientId = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
 
-        // Security
-        SecurityProtocol = SecurityProtocol.SaslSsl,
-        SslCaLocation = "path-to-downloaded-ca", // TODO: replace with path to ca
-        SaslMechanism = SaslMechanism.ScramSha512,
-        SaslUsername = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
-        SaslPassword = "", // TODO: replace with your credentials
+            // Security
+            SecurityProtocol = SecurityProtocol.SaslSsl,
+            SslCaLocation = "path-to-downloaded-ca", // TODO: replace with path to ca
+            SaslMechanism = SaslMechanism.ScramSha512,
+            SaslUsername = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+            SaslPassword = "", // TODO: replace with your credentials
 
-        // Application Specific, you have to adapt these values for your application
-        AutoOffsetReset = AutoOffsetReset.Earliest
-    };
+            // Application Specific, you have to adapt these values for your application
+            AutoOffsetReset = AutoOffsetReset.Earliest
+        };
 
 
-    using var kafkaConsumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
-    kafkaConsumer.Subscribe("validated-historical-data");
+        using var kafkaConsumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
+        kafkaConsumer.Subscribe("validated-historical-data");
 
-    while (true)
-    {
-        var consumerRecord = kafkaConsumer.Consume();
-        Console.WriteLine(consumerRecord.Message.Value);
+        while (true)
+        {
+            var consumerRecord = kafkaConsumer.Consume();
+            Console.WriteLine(consumerRecord.Message.Value);
+        }
     }
 }
 ```
 
 # Python
+First of all you have to install the `python-kafka` library, but according to an [GitHub Issue](https://github.com/dpkp/kafka-python/issues/2412), there is a problem with `python-kafka` if the used python version is greater than `3.11`.
+The following `requirements.txt` file works for python version `3.12`:
+```text
+kafka-python==2.0.2; python_version < '3.12'
+kafka-python @ git+https://github.com/dpkp/kafka-python.git ; python_version >= '3.12'
+```
+
+This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework:
+```python
+from kafka import KafkaConsumer
+
+consumer = KafkaConsumer(
+    'validated-historical-data',
+    # General
+    bootstrap_servers='eddie-worker.projekte.fh-hagenberg.at:5001', # TODO: replace port to your Kafka instance port
+    group_id='univie-kafka-client-group', # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+    client_id='univie-kafka-client', # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+
+    # Security
+    security_protocol='SASL_SSL',
+    ssl_cafile="/home/benjamin/partner-deployments/root-ca-cert.pem",
+    sasl_mechanism="SCRAM-SHA-512",
+    sasl_plain_username="univie-kafka-client", # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+    sasl_plain_password="", # TODO: Insert your credentials
+
+    # Application Specific
+    auto_offset_reset='earliest',
+)
+
+print("Listening to validated-historical-data...")
+
+for message in consumer:
+    print({message.value})
+
+```
