@@ -38,27 +38,6 @@ data:
         "maxGranularity": "P1D"
       },
       {
-        "type": "genericAiida",
-        "id": "5dc71d7e-e8cd-4403-a3a8-d3c095c97a84",
-        "name": "FUTURE_NEAR_REALTIME_DATA",
-        "description": "Near realtime consumption data from the smart meter",
-        "purpose": "purpose",
-        "policyLink": "https://example.com/toc",
-        "duration": {
-          "type": "relativeDuration",
-          "start": "P0D",
-          "end": "P10D"
-        },
-        "transmissionSchedule": "*/5 * * * * *",
-        "schemas": [
-          "SMART-METER-P1-RAW"
-        ],
-        "dataTags": [
-          "1-0:1.8.0",
-          "1-0:1.7.0"
-        ]
-      },
-      {
         "type": "validated",
         "id": "b35dc783-a25e-487a-a914-6064bdd7feb5",
         "name": "LAST_3_MONTHS_HOURLY_MEASUREMENTS_PER_DAY",
@@ -73,22 +52,5 @@ data:
         "energyType": "ELECTRICITY",
         "minGranularity": "PT1H",
         "maxGranularity": "PT1H"
-      },
-      {
-        "type": "account",
-        "id": "8685eed4-ab97-4c57-9409-76295792ee1c",
-        "name": "Accounting point master data data need",
-        "description": "Gets accounting point master data",
-        "purpose": "Some purpose",
-        "policyLink": "https://example.com/toc"
-      },
-      {
-        "type": "account",
-        "id": "8685eed4-ab97-4c57-9409-76295792ee1d",
-        "name": "Disabled accounting point master data data need",
-        "description": "Gets accounting point master data",
-        "purpose": "Some purpose",
-        "policyLink": "https://example.com/toc",
-        "enabled": false
       }
     ]

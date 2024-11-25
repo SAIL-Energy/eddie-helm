@@ -10,6 +10,7 @@ ingress:
 
 postgres:
   replicaCount: 0
+  database: "eddie"
   encryptedPassword: ""
   encryptedUsername: ""
   version: "latest"

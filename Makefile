@@ -65,10 +65,10 @@ create-ghcr-secret:
 	  --docker-password=${CR_PAT}
 
 create-fingrid-jks-secret:
-	kubectl -n $(NAMESPACE) create secret generic fingrid-jks --from-file $(FILE_LOCATION)
+	kubectl -n $(NAMESPACE) create secret generic fingrid-jks --from-file=fingrid.jks$(FILE_LOCATION)
 
 create-aansluiting-jks-secret:
-	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file $(FILE_LOCATION)
+	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file=aansluiting.jks=$(FILE_LOCATION)
 
 create-ssl-stores-secret:
 	kubectl -n $(NAMESPACE) create secret generic kafka-ssl-stores \
