@@ -15,7 +15,7 @@ Each EDDIE instance currently consists of the following components:
 ### EDDIE Core
 As the name suggests, EDDIE Core contains the major logic of the EDDIE framework. 
 It includes the region connectors and outbound connectors.
-EDDIE Core is responsible to retrieve data from region-connectors and write it to Kafka.
+The retrieved data from region-connectors is written to Kafka.
 Your EDDIE Core instances are currently hosted on the following urls:
 - University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie`
 - Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie`
@@ -40,7 +40,7 @@ curl -X POST your-eddie-url/data-needs/management \
   "type": "validated",
   "policyLink": "https://example.com/toc",
   "name": "My awesome data need",
-  "description": "# This is a description",
+  "description": "This is a description",
   "purpose": "A text explaining the purpose of this data need.",
   "duration": {
     "type": "relativeDuration"
@@ -85,3 +85,29 @@ Your Kafka brokers are reachable at (we will send you your credentials):
 The Postgres database is used by EDDIE Core to store data.
 In general there should be no reason, why you need access to this database.
 Please contact us, if you require access.
+
+## Kafka Connection Examples
+We are currently using a self-signed Certificate Authority for our Kafka Broker Certificates.
+Consequently, you have to configure our root ca as trusted certificate, how this is done will be explained in the dedicated examples.
+The CA certificate can be downloaded from the [SharePoint](https://hartnerconsultingcom.sharepoint.com/:u:/r/sites/EuropeanDataAccess/Freigegebene%20Dokumente/WPs/WP6_Demonstrators/Demo%20Deployment/root-ca-cert.pem?csf=1&web=1&e=UyyyRB).
+
+### Kafkactl
+Kafkactl is a very simple console tool, that can be used to interact with a Kafka Broker.
+The simplest possible configuration looks like this:
+```yaml
+contexts:
+  default:
+    brokers:
+      - eddie-worker.projekte.fh-hagenberg.at:5001 # TODO: replace port to your Kafka instance port
+    sasl:
+      enabled: true
+      username: # REPLACE ME
+      password: # REPLACE ME
+      mechanism: scram-sha512
+    tls:
+      enabled: true
+      ca: path-to-downloaded-ca # REPLACE ME
+current-context: default
+```
+
+### 
