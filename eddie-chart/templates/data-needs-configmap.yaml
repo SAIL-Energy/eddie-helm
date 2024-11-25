@@ -1,3 +1,4 @@
+{{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -54,3 +55,4 @@ data:
         "maxGranularity": "PT1H"
       }
     ]
+{{- end }}

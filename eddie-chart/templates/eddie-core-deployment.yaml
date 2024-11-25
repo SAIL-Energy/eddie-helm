@@ -16,9 +16,11 @@ spec:
         - name: eddie-core
           image: "ghcr.io/eddie-energy/eddie:{{ .Values.core.version }}"
           volumeMounts:
+            {{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
             - name: data-needs-volume
               mountPath: /opt/core/config/data-needs.json
               subPath: data-needs.json
+            {{- end }}
             - name: ponton
               mountPath: /opt/ponton
             {{- include "eddie.region-connectors.fi-fingrid.volumeMount" . | indent 12 }}
@@ -37,9 +39,11 @@ spec:
                   name: {{ .Release.Name }}-core-secret
                   key: jwtHmacSecret
             - name: EDDIE_DATA_NEEDS_CONFIG_DATA_NEED_SOURCE
-              value: config
+              value: {{ .Values.core.dataNeedsConfig.datasource }}
+            {{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
             - name: EDDIE_DATA_NEEDS_CONFIG_FILE
               value: "./config/data-needs.json"
+            {{- end }}
             - name: SPRING_DATASOURCE_URL
               value: {{ include "eddie.postgres-url" . }}
             - name: SPRING_DATASOURCE_USERNAME
@@ -76,9 +80,11 @@ spec:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
 
       volumes:
+        {{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
         - name: data-needs-volume
           configMap:
             name: data-needs-configmap
+        {{- end }}
         - name: ponton
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-core-ponton-pvc
