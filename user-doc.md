@@ -110,4 +110,52 @@ contexts:
 current-context: default
 ```
 
-### 
+### Java
+The following properties have to be configured to consume data from the deployed Kafka Broker.
+Please note, that this configuration has to be applied for your specific use cases.
+
+First of all you have to configure your Java installation to trust our CA, this can be done as follows:
+```bash
+cd $JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
+keytool -keystore ../lib/security/cacerts -import -alias eddie-worker.projekte.fh-hagenberg.at -file path-to-downloaded-ca # Replace path to root ca
+```
+
+Then you can configure your configurations in your `kafka-consumer.properties` file:
+```yaml
+# General
+bootstrap.servers=eddie-worker.projekte.fh-hagenberg.at:5001 # TODO: replace port to your Kafka instance port
+group.id=univie-kafka-client-group # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+client.id=univie-kafka-client # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+
+# Security
+security.protocol=SASL_SSL
+sasl.jaas.config=org.apache.kafka.common.security.scram.ScramLoginModule required username='' password=''; # TODO: Insert your Credentials
+sasl.mechanism=SCRAM-SHA-512
+
+# Application Specific, you have to adapt these values for your application
+key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
+auto.offset.reset=earliest
+```
+
+This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework e.g. spring boot:
+```java
+public class Main {
+    public static final ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+
+    public static void main(String[] args) throws IOException {
+        Properties consumerProperties = new Properties();
+        consumerProperties.load(classloader.getResourceAsStream("kafka-consumer.properties"));
+
+        try (var consumer = new KafkaConsumer<String, String>(consumerProperties)) {
+            consumer.subscribe(List.of("validated-historical-data"));
+
+            while (true) {
+                var records = consumer.poll(Duration.ofMillis(Long.MAX_VALUE));
+                records.forEach(record -> System.out.println(record.value()));
+            }
+        }
+
+    }
+}
+```
