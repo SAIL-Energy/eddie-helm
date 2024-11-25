@@ -21,8 +21,8 @@ Your EDDIE Core instances are currently hosted on the following urls:
 - Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie`
 - Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/eddie`
 - Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie`
-
 This value should be configured in your EDDIE Connect Button as the `eddieUrl`.  
+ 
 To manage your connections your can access the Admin Console on the following urls:
 - University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/outbound-connectors/admin-console`
 - Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie/outbound-connectors/admin-console`
@@ -30,36 +30,40 @@ To manage your connections your can access the Admin Console on the following ur
 - Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie/outbound-connectors/admin-console`
 
 #### Data Needs
-Your EDDIE Core instance is preconfigured with a set of data needs. If you want to create additional Data Needs, please use our API at `your-eddie-url/data-needs/management`.
-You can find an extensive documentation for creating data needs in our [documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/1-running/OPERATION.html#data-need-configuration) (swagger is currently disabled on the deployed instances, please use other http tools to creat data needs).
-For instance, you could use the following curl command to create a data-need:
-```http request
-curl -X POST your-eddie-url/data-needs/management \
--H "Content-Type: application/json" \
--d '{
-  "type": "validated",
-  "policyLink": "https://example.com/toc",
-  "name": "My awesome data need",
-  "description": "This is a description",
-  "purpose": "A text explaining the purpose of this data need.",
-  "duration": {
-    "type": "relativeDuration"
-  },
-  "energyType": "ELECTRICITY",
-  "minGranularity": "PT15M",
-  "maxGranularity": "P1D",
-  "regionConnectorFilter": {
-    "type": "allowlist",
-    "regionConnectorIds": [
-      "at-eda"
-    ]
-  }
-}'
+Your EDDIE Core instance is preconfigured with a set of data needs. 
+If you want to create additional Data Needs, please use our API at `your-eddie-url/data-needs/management`.
+You can find an extensive documentation for configuring data needs in our [documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/1-running/OPERATION.html#data-need-configuration) (swagger is currently disabled on the deployed instances, please use other http tools to creat data needs).
+
+It is also important to know, that not each data need works for each region connector.
+To get information about the data need restrictions of the region connectors (e.g. supported granularities) use this endpoint:
+- University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/api/region-connectors-metadata`
+- Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie/api/region-connectors-metadata`
+- Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/eddie/api/region-connectors-metadata`
+- Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie/api/region-connectors-metadata`
+
+You could use the following curl command to create a data-need:
+```bash
+curl -X POST eddieUrl/data-needs/management \
+	-H "Content-Type: application/json" \
+	-d '{
+        "type": "validated",
+        "policyLink": "",
+        "name": "Last 3 Months",
+        "description": "",
+        "purpose": "",
+        "duration": {
+          "type": "relativeDuration",
+          "start": "-P3M",
+          "end": "P-1D"
+        },
+        "energyType": "ELECTRICITY",
+        "minGranularity": "PT15M",
+        "maxGranularity": "PT1H"
+        }'
 ```
 
 ### EDDIE Example App
 The EDDIE Example App is a very simplistic application, that provides you a configured EDDIE Button to test the Framework.
-You can log in with the preconfigured account: 
 ```
 username: testuser@example.com
 password: testuser@example.com
@@ -113,10 +117,16 @@ current-context: default
 ```
 
 ### Java
-First of all you have to configure your Java installation to trust our CA, this can be done as follows:
+First of all you have to configure your Java installation to trust our CA, this can be done as follows:  
+Linux:
 ```bash
 cd $JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
 keytool -keystore ../lib/security/cacerts -import -alias eddie-worker.projekte.fh-hagenberg.at -file path-to-downloaded-ca # Replace path to root ca
+```
+Powershell (not verified):
+```powershell
+cd $env:JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
+keytool.exe -keystore "../lib/security/cacerts" -import -alias eddie-worker.projekte.fh-hagenberg.at -file "path-to-downloaded-ca"
 ```
 
 Then you can configure your configurations in your `kafka-consumer.properties` file:
@@ -224,7 +234,7 @@ internal static class Program
 }
 ```
 
-# Python
+### Python
 First of all you have to install the `python-kafka` library, but according to an [GitHub Issue](https://github.com/dpkp/kafka-python/issues/2412), there is a problem with `python-kafka` if the used python version is greater than `3.11`.
 The following `requirements.txt` file works for python version `3.12`:
 ```text
@@ -260,7 +270,7 @@ for message in consumer:
     print({message.value})
 ```
 
-# F#
+### F#
 First of all you have to add this package to your NuGets:
 ```xml
 <ItemGroup>
