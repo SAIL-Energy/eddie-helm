@@ -111,9 +111,6 @@ current-context: default
 ```
 
 ### Java
-The following properties have to be configured to consume data from the deployed Kafka Broker.
-Please note, that this configuration has to be applied for your specific use cases.
-
 First of all you have to configure your Java installation to trust our CA, this can be done as follows:
 ```bash
 cd $JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
@@ -138,6 +135,15 @@ value.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 auto.offset.reset=earliest
 ```
 
+Then you can install the Kafka client by adding this to your dependencies:
+```groovy
+dependencies {
+    // https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients
+    implementation 'org.apache.kafka:kafka-clients:3.9.0'
+    ...
+}
+```
+
 This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework e.g. spring boot:
 ```java
 public class Main {
@@ -155,7 +161,50 @@ public class Main {
                 records.forEach(record -> System.out.println(record.value()));
             }
         }
-
     }
 }
 ```
+
+### C#
+First of all you have to add this package to your NuGets:
+```xml
+<ItemGroup>
+<PackageReference Include="Confluent.Kafka" Version="2.6.1" />
+</ItemGroup>
+```
+
+This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework:
+```cs
+public static void Main()
+{
+    var consumerConfig = new ConsumerConfig
+    {
+        // General
+        BootstrapServers = "eddie-worker.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
+        GroupId = "univie-kafka-client-group", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+        ClientId = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+
+        // Security
+        SecurityProtocol = SecurityProtocol.SaslSsl,
+        SslCaLocation = "path-to-downloaded-ca", // TODO: replace with path to ca
+        SaslMechanism = SaslMechanism.ScramSha512,
+        SaslUsername = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+        SaslPassword = "", // TODO: replace with your credentials
+
+        // Application Specific, you have to adapt these values for your application
+        AutoOffsetReset = AutoOffsetReset.Earliest
+    };
+
+
+    using var kafkaConsumer = new ConsumerBuilder<Ignore, string>(consumerConfig).Build();
+    kafkaConsumer.Subscribe("validated-historical-data");
+
+    while (true)
+    {
+        var consumerRecord = kafkaConsumer.Consume();
+        Console.WriteLine(consumerRecord.Message.Value);
+    }
+}
+```
+
+# Python
