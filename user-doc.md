@@ -89,7 +89,9 @@ Please contact us, if you require access.
 ## Kafka Connection Examples
 We are currently using a self-signed Certificate Authority for our Kafka Broker Certificates.
 Consequently, you have to configure our root ca as trusted certificate, how this is done will be explained in the dedicated examples.
-The CA certificate can be downloaded from the [SharePoint](https://hartnerconsultingcom.sharepoint.com/:u:/r/sites/EuropeanDataAccess/Freigegebene%20Dokumente/WPs/WP6_Demonstrators/Demo%20Deployment/root-ca-cert.pem?csf=1&web=1&e=UyyyRB).
+The CA certificate can be downloaded from the [SharePoint](https://hartnerconsultingcom.sharepoint.com/:u:/r/sites/EuropeanDataAccess/Freigegebene%20Dokumente/WPs/WP6_Demonstrators/Demo%20Deployment/root-ca-cert.pem?csf=1&web=1&e=UyyyRB).  
+The following examples show you the basic configuration and should give you a good starting point for your applications.
+If your programming language is not included in the following examples, please create an Issue, so we can improve our documentation.
 
 ### Kafkactl
 Kafkactl is a very simple console tool, that can be used to interact with a Kafka Broker.
@@ -256,5 +258,44 @@ print("Listening to validated-historical-data...")
 
 for message in consumer:
     print({message.value})
+```
 
+# F#
+First of all you have to add this package to your NuGets:
+```xml
+<ItemGroup>
+<PackageReference Include="Confluent.Kafka" Version="2.6.1" />
+</ItemGroup>
+```
+
+This code should give you an idea, how to create the Kafka Consumer, for real usage examples please refer to the documentation of your used framework:
+```fsharp
+open Confluent.Kafka
+
+let consumerConfig =
+    ConsumerConfig(
+        // General
+        BootstrapServers = "eddie-worker.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
+        GroupId = "univie-kafka-client-group", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+        ClientId = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+
+        // Security
+        SecurityProtocol = SecurityProtocol.SaslSsl,
+        SslCaLocation = "path-to-downloaded-ca", // TODO: replace with path to ca
+        SaslMechanism = SaslMechanism.ScramSha512,
+        SaslUsername = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
+        SaslPassword = "", // TODO: replace with your credentials
+
+        // Application Specific, you have to adapt these values for your application
+        AutoOffsetReset = AutoOffsetReset.Earliest
+    )
+
+let kafkaConsumer = ConsumerBuilder<Ignore, string>(consumerConfig).Build();
+kafkaConsumer.Subscribe("validated-historical-data");
+
+while (true) do
+    let consumerRecord = kafkaConsumer.Consume()
+    printfn $"%s{consumerRecord.Message.Value}"
+    
+kafkaConsumer.Close();
 ```
