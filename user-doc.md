@@ -1,4 +1,4 @@
-# EDDIE Partner Deployment User Documentation
+# EDDIE Demo Deployment User Documentation
 Dear Partners,  
 for the development of demonstrator applications we (FH) will provide a dedicated EDDIE instance for each partner.
 ***Please note, that the partner deployment is currently in an experimental phase.***
@@ -8,7 +8,6 @@ When you received this documentation, your developer accounts should already hav
 ## Fundamentals
 Each EDDIE instance currently consists of the following components:
 - EDDIE Core
-- EDDIE Example App
 - Kafka
 - Postgres
 
@@ -28,6 +27,43 @@ To manage your connections your can access the Admin Console on the following ur
 - Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie/outbound-connectors/admin-console`
 - Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/eddie/outbound-connectors/admin-console`
 - Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie/outbound-connectors/admin-console`
+
+
+#### Eddie Connect Button
+You can embed the EDDIE Connect Button into your application with the following code:
+```html
+<head>
+    ...
+    # TODO: Replace with your EDDIE Core URL
+    <script type="module" src="https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/lib/eddie-components.js"></script>
+</head>
+<body>
+    <eddie-connect-button
+            # TODO: Replace with existing data need id
+            data-need-id="9bd0668f-cc19-40a8-99db-dc2cb2802b17" 
+            connection-id="generateUUID()"
+    ></eddie-connect-button>
+
+<script type="module">
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = (Math.random() * 16) | 0;
+            const v = c === 'x' ? r : (r & 0x3) | 0x8;
+            return v.toString(16);
+        });
+    }
+</script>
+</body>
+</html>
+```
+
+The full code examples can be viewed here:
+- [Connect Button with Data Needs Dropdown](./demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
+- [Connect Button with fixed Data Need](./demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
+<!---
+- [Connect Button with Data Needs Dropdown](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
+- [Connect Button with fixed Data Need](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-fixed-dataneed.html)
+--->
 
 #### Data Needs
 Your EDDIE Core instance is preconfigured with a set of data needs. 
@@ -61,18 +97,6 @@ curl -X POST eddieUrl/data-needs/management \
         "maxGranularity": "PT1H"
         }'
 ```
-
-### EDDIE Example App
-The EDDIE Example App is a very simplistic application, that provides you a configured EDDIE Button to test the Framework.
-```
-username: testuser@example.com
-password: testuser@example.com
-```
-The example app is hosted at the following urls:
-- University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/example-app`
-- Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/example-app`
-- Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/example-app`
-- Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/example-app`
 
 ### Kafka
 Currently, the deployment contains one single Kafka Broker for each instance.
@@ -124,7 +148,7 @@ cd $JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to
 keytool -keystore ../lib/security/cacerts -import -alias eddie-worker.projekte.fh-hagenberg.at -file path-to-downloaded-ca # Replace path to root ca
 ```
 Powershell (not verified):
-```powershell
+```bash
 cd $env:JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
 keytool.exe -keystore "../lib/security/cacerts" -import -alias eddie-worker.projekte.fh-hagenberg.at -file "path-to-downloaded-ca"
 ```
@@ -255,7 +279,7 @@ consumer = KafkaConsumer(
 
     # Security
     security_protocol='SASL_SSL',
-    ssl_cafile="/home/benjamin/partner-deployments/root-ca-cert.pem",
+    ssl_cafile="", # TODO: replace with path to downloaded ca
     sasl_mechanism="SCRAM-SHA-512",
     sasl_plain_username="univie-kafka-client", # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
     sasl_plain_password="", # TODO: Insert your credentials
