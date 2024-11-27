@@ -40,11 +40,11 @@ spec:
               value: "{{ .Release.Name }}-kafka:9094"
             - name: PUBLIC_CONTEXT_PATH
               value: "/{{ .Values.ingress.basePath }}/example-app"
-            - name: KAFKA_SECURITY_PROTOCOL
+            - name: EXAMPLE_APP_KAFKA_SECURITY_PROTOCOL
               value: "SASL_PLAINTEXT"
-            - name: KAFKA_SASL_MECHANISM
+            - name: EXAMPLE_APP_KAFKA_SASL_MECHANISM
               value: "SCRAM-SHA-512"
-            - name: KAFKA_SASL_JAAS_CONFIG
+            - name: EXAMPLE_APP_KAFKA_SASL_JAAS_CONFIG
               value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.exampleApp.kafkaUser.username }}' password='{{ .Values.exampleApp.kafkaUser.password }}';"
 
       imagePullSecrets:

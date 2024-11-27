@@ -99,6 +99,8 @@ core:
     password: "eddie-core"
   dataNeedsConfig:
     datasource: "config"
+  adminConsole:
+    enabled: false
 
 regionConnectors:
   atEda:

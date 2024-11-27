@@ -31,6 +31,7 @@ spec:
                 name: {{ .Release.Name }}-core
                 port:
                   number: 8080
+          {{- if eq .Values.core.adminConsole.enabled true }}
           - path: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/eddie/outbound-connectors
             pathType: Prefix
             backend:
@@ -38,6 +39,7 @@ spec:
                 name: {{ .Release.Name }}-core
                 port:
                   number: 9090
+          {{- end }}
 {{- if eq .Values.ingress.tls.enabled "true"}}
   tls:
   - hosts:
