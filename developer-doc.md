@@ -16,11 +16,6 @@ Set Namespace as temporary variable in local environment:
 export NAMESPACE=mynamespace
 ```
 
-Create EDDIE Config Namespace:
-```bash
-kubectl create namespace eddie-config
-```
-
 Create Namespace:
 ```bash
 kubectl create namespace $NAMESPACE
@@ -44,6 +39,16 @@ add secret to values:
 ```yaml
 ghcrImagePullSecrets:
   name: "ghcr-secret"
+```
+
+If you are planning to install multiple eddie instances on the same cluster, add this to your values-yaml:
+```yaml
+sealed-secrets:
+  namespace: "univie"
+  fullnameOverride: "sealed-secrets-controller-univie"
+  rbac:
+    create: true
+    clusterRoleName: "univie-secrets-unsealer"
 ```
 
 Install
@@ -150,11 +155,36 @@ Upgrade Check if it works properly
 make upgrade
 ```
 
-Configure Ingress and TLS:
+Configure Ingress:
 ```bash
 ingress:
   basePath: "univie"
   host: "eddie-worker.projekte.fh-hagenberg.at"
+```
+
+Create Cluster Issuer:
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    email: developers@eddie.energy
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            class: traefik
+```
+
+Configure TLS:
+```bash
+ingress:
+  tls: enabled
+  clusterIssuer: "letsencrypt-prod"
 ```
 
 Configure Simulation Region Connector:
@@ -164,14 +194,72 @@ regionConnectors:
     enabled: "true"
 ```
 
-Configure ES Datadis:
+## AT EDA
+```bash
+make seal-secret VALUE="regionConnectors.atEda.pontonMessenger.encryptedUsername" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.atEda.pontonMessenger.encryptedPassword" SECRET_NAME="region-connector-secrets"
+```
+
+## ES DataDis
 ```yaml
 regionConnectors:
   esDatadis:
     enabled: "true"
-    encryptedUsername: "AgBBc9AEMeyJLdW0AfGCIgg9Bb8XAMqYUOeC26cQ3ZYZbhuANkhy3JlaLWZJIWmyKx/0ZhBx4z6F3kelnSC2VrN6FnpfmCUw8TeI55wO8GH7fAbX2DHIoQDLSj8q2sbQjs5Rk/t56fxUC1dQ7MRKDLkxeFtjEO1uOsZLj+sElE9MGx2JWIsyiYKMezv84Q2ynLG25DkeQZIkd/zNvrFRItyP3PSKY1ENdBUx/+tZKVmVY3hc4gPjuY/AzHZPqbmhv26ARhJn2lVk55alP9AjMcKmSymPus0iO5QJJYTUh+9ACzYNDs/4F4RYP/wps+fol/Mc2Q7dCA+jc7ww33oPxhKhHxWWPJxBfi1yX4TEav5/7IuwYATeulH63DoK2XDyd2LEtAb1HLE8VwSyGzQDUPn8GEppdIx1+2tLY/gtD12avPKZ6wS4Vo5ZL7qwHUK2WMq79aZepem9o1KaONmc3vMMS/fPK4xOG9NTRYDtZT0lndsJycmaer3UbuoP55/TYluPZhE/5rMZuFoSB3pN/S84T57Ng+3aAfDlU+Od07vYkWdnDJcIxp9MPyaRyRhSOxDRs8x728IjzwoSrDDFjrTgWbS3R+hTNO7JXHi8l+xKkXaQpdmF0KPKC5lRCovQRFTQoH6iLcpWd14n5ehpwIX+dFdDCg4gQkqIOT0EGyDHcDJ/U7anU30oKW0qvKn0s+te4y49l32yAQ=="
-    encryptedPassword: "AgBfY6ZKGKvErQhVo+Hbry7jLy+Y/mILjq+FAdBJokV9TiNjntQn+7pdbbxxVTXz0JWoqCEs8g7RIMl2bqdnCJcPvIouF8TpGIN8nrf9gJ8jr+qa/+xo34CPeEhrOEeiNWkDEKwrtIZrSJNHB0WlDKLQKhoNWf0KFCYwE9Zq8GPGzS/iI4jI4sUTF7bKGbIlLuAhwdMFlUSuiJXOl0N8XJfr1+2bh1VoUzNs0PjBihnJu9Eu51tNFyY7a5hmyBk2NI9Ix61NfMCvXGF2ez0o55R1xvw/yOQWKK0SustRwNkM23BzvBu44XWxBDQwsib32n3WXxl41WegwzJCCafRpRWGSNp3ZIwG8qWRHFm+JBCWA5kExOjMNtOTeuWVtUMv7N3GM9S/85wFxGn1ThuLV8N47XQrJVduBEnW3L72CClROFiiCePnjjksj0FTavOlAjNwrof7JISYuvTytFcE6ZwQ0kdZleiUxsW3S35H0giYm2lJl4XvL3rdh7ecxhqQSZIy9eno4zc7JzHaPVjma0D9Y9D3Pj6ja1s2ym7GHz/f0CY9mqvuN1eXvgqfqFddWcN37MkSlLsMYRlO91rH5uOYT6gjp+NFqryKMeZ+riQ/hOcimjahPtGf1Ft/PAVHo9Nn6PFqhwxXxWpDQZD0yypdorqyZ5xYShjoUlCOr0s1y7uuFrHdPLFn13Z24FMYCsQHyu2isMLWRHUVgSM="
+    encryptedUsername: "datadis username"
+    encryptedPassword: "datadis password"
     polling: "0 0 17 * * *"
     retry: "0 0 * * * *"
     basePath: "https://datadis.es/"
+```
+```bash
+make seal-secret VALUE="regionConnectors.esDatadis.encryptedUsername" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.esDatadis.encryptedPassword" SECRET_NAME="region-connector-secrets"
+```
+
+
+## FR Enedis
+```yaml
+regionConnectors:
+  esDatadis:
+    enabled: "true"
+    encryptedUsername: "datadis username"
+    encryptedPassword: "datadis password"
+    polling: "0 0 17 * * *"
+    retry: "0 0 * * * *"
+    basePath: "https://datadis.es/"
+```
+```bash
+make seal-secret VALUE="regionConnectors.frEnedis.client.encryptedId" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.frEnedis.client.encryptedSecret" SECRET_NAME="region-connector-secrets"
+```
+
+## FI Fingrid
+```bash
+make create-fingrid-jks-secret FILE_LOCATION=location to jks store
+```
+```bash
+make seal-secret VALUE="regionConnectors.fiFingrid.organisation.encryptedUser" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.fiFingrid.keystore.encryptedPassword" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.fiFingrid.keystore.key.encryptedAlias" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.fiFingrid.keystore.key.encryptedPassword" SECRET_NAME="region-connector-secrets"
+```
+
+## NL Mijn Aansluiting
+```bash
+make create-aansluiting-jks-secret FILE_LOCATION=location to jks store
+```
+```bash
+make seal-secret VALUE="regionConnectors.nlMijnAansluiting.single.encryptedKeyId" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.nlMijnAansluiting.continuous.encryptedKeyId" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.nlMijnAansluiting.keystore.encryptedPassword" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.nlMijnAansluiting.keystore.key.encryptedAlias" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.nlMijnAansluiting.keystore.key.encryptedPassword" SECRET_NAME="region-connector-secrets"
+```
+
+## US GreenButton
+```bash
+make seal-secret VALUE="regionConnectors.usGreenButton.client.encryptedApiToken" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.usGreenButton.encryptedWebhookSecret" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.usGreenButton.clients[0].encryptedId" SECRET_NAME="region-connector-secrets"
+make seal-secret VALUE="regionConnectors.usGreenButton.clients[0].encryptedSecret" SECRET_NAME="region-connector-secrets"
 ```
