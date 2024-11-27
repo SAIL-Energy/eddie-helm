@@ -1,12 +1,10 @@
-# EDDIE Demo Instances User Documentation
-Dear Partners,  
-for the development of demonstrator applications we (FH) will provide a dedicated EDDIE instance for each partner.
+# EDDIE Demo Instances User Documentation (v1)
+For the development of demonstrator applications we (FH) will provide a dedicated EDDIE instance for each partner.
 ***Please note, that the demo instances are still in an experimental phase, and we cannot assure, that your data will be persisted permanently.***
 ***For instance, we are planning on migrating to a new server very soon, which will cause data loss.***
 If you are experiencing any issues, please create Bug Tickets in our [GitHub project](https://github.com/eddie-energy/eddie-helm/issues/new?assignees=&labels=bug&projects=&template=bug.md&title=).
 When you received this documentation, your developer accounts should already have permission to create Bugs, otherwise please contact us.
 
-## Fundamentals
 Each EDDIE instance currently consists of the following components:
 - EDDIE Core
 - Kafka
@@ -16,7 +14,7 @@ Alternatively to Kafka, EDDIE supports AMQP (Advanced Message Queuing Protocol).
 Currently, our deployment does not include an AMQP broker.
 If you are hosting an AMQP supporting broker e.g. RabbitMQ yourself, please contact us, so we can configure your EDDIE instance to use this broker.
 
-### EDDIE Core
+## EDDIE Core
 As the name suggests, EDDIE Core contains the major logic of the EDDIE framework. 
 It includes the logic to retrieve energy data using region-connectors and write it to outbound connectors e.g. Apache Kafka.
 Your EDDIE Core instances are currently hosted on the following urls, those URLs are required to configure the EDDIE Connect Button:
@@ -25,9 +23,9 @@ Your EDDIE Core instances are currently hosted on the following urls, those URLs
 - Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie`
 - Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie`
 
-For detailed documentation about EDDIE please refer to our official [Framework Documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/).
+For detailed documentation about EDDIE please refer to our (preliminary) [Framework Documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/).
  
-#### Eddie Connect Button
+### Eddie Connect Button
 You can embed the EDDIE Connect Button into your application with the following code:
 ```html
 <head>
@@ -64,12 +62,17 @@ The full code examples can be viewed here:
 - [Connect Button with fixed Data Need](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-fixed-dataneed.html)
 --->
 
-#### Admin Console
+### Region Connectors
+To get energy data, select the region connector for your country and follow the instructions shown in the popup window.
+The simplest way to get started, is by using the Simulation region connector.
+When selecting the Simulation Region Connector, you are redirected to an Simulation Interface, where you can publish data that is then available on the outbound connectors e.g. Kafka.
+
+### Admin Console
 In the future you can observe the states of your permission requests and manage data needs in the Admin console.
 For now, we had to disable the Admin Console for your deployments, because the Admin Console is currently not properly secured.
 We are already working on securing the Admin Console and will keep you updated.
 
-#### Supported Features
+### Supported Features
 Depending on the configuration of your EDDIE instance, the region connectors can support different features.
 To check, which features are supported by which region connector, you can use the following endpoints:
 - University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/management/region-connectors/supported-features`
@@ -77,15 +80,15 @@ To check, which features are supported by which region connector, you can use th
 - Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie/management/region-connectors/supported-features`
 - Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie/management/region-connectors/supported-features`
 
-#### Data Needs
-Your EDDIE Core instance is preconfigured with a set of data needs, your current Data Needs can be viewed at:
+### Data Needs
+Your EDDIE Core instance is preconfigured with a set of data needs, your current data needs can be viewed at:
 - University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/data-needs/api`
 - Digital4Grids: `https://eddie-demo.projekte.fh-hagenberg.at/d4g/eddie/data-needs/api`
 - Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie/data-needs/api`
 - Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie/data-needs/api`
  
-If you want to create additional Data Needs, please use our API at `your-eddie-url/data-needs/management`.
-You can find an extensive documentation for configuring data needs in our [documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/1-running/OPERATION.html#data-need-configuration) (swagger is currently disabled on the deployed instances, please use other http tools to creat data needs).
+If you want to create additional data needs, please use our API at `your-eddie-url/data-needs/management`.
+You can find an extensive documentation for configuring data needs in our [documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/1-running/OPERATION.html#data-need-configuration) (swagger is currently disabled on the deployed instances, please use other http tools to create data needs).
 
 It is also important to know, that not each data need works for each region connector.
 To get information about the data need restrictions of the region connectors (e.g. supported granularities) use this endpoint:
@@ -115,7 +118,7 @@ curl -X POST eddieUrl/data-needs/management \
         }'
 ```
 
-### Kafka
+## Kafka
 Currently, the deployment contains one single Kafka Broker for each instance.
 The Kafka Broker is running in KRaft mode and external communication is secured with SASL_SSL.
 Therefore, communication is encrypted, and you need an account for authentication to access data.
@@ -128,7 +131,7 @@ Your Kafka brokers are reachable at (we will send you your credentials):
 
 Detailed information about the currently used Kafka topics can be found [in the Kafka section of our Framework Documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/2-integrating/KAFKA.html).
 
-### Postgres
+## Postgres
 The Postgres database is used by EDDIE Core to store data.
 In general there should be no reason, why you need access to this database.
 Please contact us, if you require access.
