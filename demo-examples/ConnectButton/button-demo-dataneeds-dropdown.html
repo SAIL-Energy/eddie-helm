@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <title>EDDIE Button</title>
 
-    <script type="module" src="https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/lib/eddie-components.js"></script>
+    <script type="module" src="https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie/lib/eddie-components.js"></script>
 
     <style>
         form {
@@ -33,13 +33,13 @@
         <select name="data-need-id" autocomplete="off"></select>
     </label>
     <label>
-        <span>Connection ID</span>
-        <input type="text" name="connection-id" id="connection-id" />
+        <span>Connection ID:</span><br>
+        <span id="connection-id">0</span>
     </label>
 </form>
 
 <script type="module">
-    const coreUrl = "https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie";
+    const coreUrl = "https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie";
 
     // Fetch data needs from the API
     const dataNeeds = await fetch(`${coreUrl}/data-needs/api`).then(
@@ -47,16 +47,22 @@
     );
 
     // Set button attributes and form values from query parameters
-    const button = document.querySelector("eddie-connect-button");
+    let button = document.querySelector("eddie-connect-button");
     const inputs = document.querySelectorAll("input, select");
+
+    // Set connection Id
+    const uuid = generateUUID();
+    document.getElementById('connection-id').innerHTML = uuid;
+    button.setAttribute("connection-id", uuid);
+    updateButton();
 
     // Populate the select element with data needs
     const select = document.querySelector("select[name='data-need-id']");
     let first = true;
     for (const { id, name } of dataNeeds) {
         if (first) {
-            button.setAttribute("data-need-id", id)
-            button.replaceWith(button.cloneNode());
+            button.setAttribute("data-need-id", id);
+            updateButton();
             first = false;
         }
         const option = document.createElement("option");
@@ -69,7 +75,7 @@
         input.addEventListener("change", (event) => {
             const { name, value, type, checked } = event.target;
             button.setAttribute(name, type === "checkbox" ? checked : value);
-            button.replaceWith(button.cloneNode());
+            updateButton();
         });
     });
 
@@ -86,8 +92,11 @@
         });
     }
 
-    // Set the generated UUID as the value of the input
-    document.getElementById('connection-id').value = generateUUID();
+    function updateButton() {
+        const oldButton = button;
+        button = button.cloneNode();
+        oldButton.replaceWith(button);
+    }
 </script>
 </body>
 </html>

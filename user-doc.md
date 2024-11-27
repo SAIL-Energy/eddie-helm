@@ -36,13 +36,16 @@ You can embed the EDDIE Connect Button into your application with the following 
     <script type="module" src="https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/lib/eddie-components.js"></script>
 </head>
 <body>
-    <eddie-connect-button
-            # TODO: Replace with existing data need id
-            data-need-id="9bd0668f-cc19-40a8-99db-dc2cb2802b17" 
-            connection-id="generateUUID()"
-    ></eddie-connect-button>
+<eddie-connect-button
+        data-need-id="9bd0668f-cc19-40a8-99db-dc2cb2802b17"
+        connection-id="1"
+></eddie-connect-button>
 
 <script type="module">
+    let button = document.querySelector("eddie-connect-button");
+    button.setAttribute("connection-id", generateUUID());
+    button.replaceWith(button);
+
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             const r = (Math.random() * 16) | 0;
