@@ -75,6 +75,8 @@ spec:
               value: "SCRAM-SHA-512"
             - name: KAFKA_SASL_JAAS_CONFIG
               value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.core.kafkaUser.username }}' password='{{ .Values.core.kafkaUser.password }}';"
+            - name: OUTBOUND_CONNECTOR_ADMIN_CONSOLE_ENABLED
+              value: {{ .Values.core.adminConsole.enabled | quote }}
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}

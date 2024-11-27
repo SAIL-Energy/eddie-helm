@@ -22,12 +22,10 @@ Your EDDIE Core instances are currently hosted on the following urls:
 - Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie`
 This value should be configured in your EDDIE Connect Button as the `eddieUrl`.  
  
-To manage your connections your can access the Admin Console on the following urls:
-- University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/outbound-connectors/admin-console`
-- Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie/outbound-connectors/admin-console`
-- Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/eddie/outbound-connectors/admin-console`
-- Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie/outbound-connectors/admin-console`
-
+#### Admin Console
+In the future you can observe the states of your permission requests and manage data needs in the Admin console.
+For now we had to disable the Admin Console for your deployments, because the Admin Console is currently not properly secured.
+We are already working on securing the Admin Console and will keep you updated.
 
 #### Eddie Connect Button
 You can embed the EDDIE Connect Button into your application with the following code:
