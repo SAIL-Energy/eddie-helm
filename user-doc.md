@@ -1,7 +1,8 @@
-# EDDIE Demo Deployment User Documentation
+# EDDIE Demo Instances User Documentation
 Dear Partners,  
 for the development of demonstrator applications we (FH) will provide a dedicated EDDIE instance for each partner.
-***Please note, that the partner deployment is currently in an experimental phase.***
+***Please note, that the demo instances are still in an experimental phase, and we cannot assure, that your data will be persisted permanently.***
+***For instance, we are planning on migrating to a new server very soon, which will cause data loss.***
 If you are experiencing any issues, please create Bug Tickets in our [GitHub project](https://github.com/eddie-energy/eddie-helm/issues/new?assignees=&labels=bug&projects=&template=bug.md&title=).
 When you received this documentation, your developer accounts should already have permission to create Bugs, otherwise please contact us.
 
@@ -11,29 +12,28 @@ Each EDDIE instance currently consists of the following components:
 - Kafka
 - Postgres
 
+Alternatively to Kafka, EDDIE supports AMQP (Advanced Message Queuing Protocol).
+Currently, our deployment does not include an AMQP broker.
+If you are hosting an AMQP supporting broker e.g. RabbitMQ yourself, please contact us, so we can configure your EDDIE instance to use this broker.
+
 ### EDDIE Core
 As the name suggests, EDDIE Core contains the major logic of the EDDIE framework. 
-It includes the region connectors and outbound connectors.
-The retrieved data from region-connectors is written to Kafka.
-Your EDDIE Core instances are currently hosted on the following urls:
-- University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie`
-- Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie`
-- Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/eddie`
-- Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie`
-This value should be configured in your EDDIE Connect Button as the `eddieUrl`.  
- 
-#### Admin Console
-In the future you can observe the states of your permission requests and manage data needs in the Admin console.
-For now we had to disable the Admin Console for your deployments, because the Admin Console is currently not properly secured.
-We are already working on securing the Admin Console and will keep you updated.
+It includes the logic to retrieve energy data using region-connectors and write it to outbound connectors e.g. Apache Kafka.
+Your EDDIE Core instances are currently hosted on the following urls, those URLs are required to configure the EDDIE Connect Button:
+- University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie`
+- Digital4Grids: `https://eddie-demo.projekte.fh-hagenberg.at/d4g/eddie`
+- Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie`
+- Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie`
 
+For detailed documentation about EDDIE please refer to our official [Framework Documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/).
+ 
 #### Eddie Connect Button
 You can embed the EDDIE Connect Button into your application with the following code:
 ```html
 <head>
     ...
     # TODO: Replace with your EDDIE Core URL
-    <script type="module" src="https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/lib/eddie-components.js"></script>
+    <script type="module" src="https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/lib/eddie-components.js"></script>
 </head>
 <body>
 <eddie-connect-button
@@ -55,28 +55,44 @@ You can embed the EDDIE Connect Button into your application with the following 
     }
 </script>
 </body>
-</html>
 ```
-
+<!---
 The full code examples can be viewed here:
 - [Connect Button with Data Needs Dropdown](./demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
 - [Connect Button with fixed Data Need](./demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
-<!---
 - [Connect Button with Data Needs Dropdown](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
 - [Connect Button with fixed Data Need](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-fixed-dataneed.html)
 --->
 
+#### Admin Console
+In the future you can observe the states of your permission requests and manage data needs in the Admin console.
+For now, we had to disable the Admin Console for your deployments, because the Admin Console is currently not properly secured.
+We are already working on securing the Admin Console and will keep you updated.
+
+#### Supported Features
+Depending on the configuration of your EDDIE instance, the region connectors can support different features.
+To check, which features are supported by which region connector, you can use the following endpoints:
+- University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/management/region-connectors/supported-features`
+- Digital4Grids: `https://eddie-demo.projekte.fh-hagenberg.at/d4g/eddie/management/region-connectors/supported-features`
+- Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie/management/region-connectors/supported-features`
+- Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie/management/region-connectors/supported-features`
+
 #### Data Needs
-Your EDDIE Core instance is preconfigured with a set of data needs. 
+Your EDDIE Core instance is preconfigured with a set of data needs, your current Data Needs can be viewed at:
+- University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/data-needs/api`
+- Digital4Grids: `https://eddie-demo.projekte.fh-hagenberg.at/d4g/eddie/data-needs/api`
+- Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie/data-needs/api`
+- Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie/data-needs/api`
+ 
 If you want to create additional Data Needs, please use our API at `your-eddie-url/data-needs/management`.
 You can find an extensive documentation for configuring data needs in our [documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/1-running/OPERATION.html#data-need-configuration) (swagger is currently disabled on the deployed instances, please use other http tools to creat data needs).
 
 It is also important to know, that not each data need works for each region connector.
 To get information about the data need restrictions of the region connectors (e.g. supported granularities) use this endpoint:
-- University Vienna: `https://eddie-worker.projekte.fh-hagenberg.at/univie/eddie/api/region-connectors-metadata`
-- Digital4Grids: `https://eddie-worker.projekte.fh-hagenberg.at/d4g/eddie/api/region-connectors-metadata`
-- Flexidao: `https://eddie-worker.projekte.fh-hagenberg.at/flexidao/eddie/api/region-connectors-metadata`
-- Eta+: `https://eddie-worker.projekte.fh-hagenberg.at/etaplus/eddie/api/region-connectors-metadata`
+- University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/api/region-connectors-metadata`
+- Digital4Grids: `https://eddie-demo.projekte.fh-hagenberg.at/d4g/eddie/api/region-connectors-metadata`
+- Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie/api/region-connectors-metadata`
+- Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie/api/region-connectors-metadata`
 
 You could use the following curl command to create a data-need:
 ```bash
@@ -105,10 +121,12 @@ The Kafka Broker is running in KRaft mode and external communication is secured 
 Therefore, communication is encrypted, and you need an account for authentication to access data.
 Furthermore, we are using a self-signed certificate for SSL, which means you need to trust our self-signed certificate manually, as described in the following examples.
 Your Kafka brokers are reachable at (we will send you your credentials):
-- University Vienna: `eddie-worker.projekte.fh-hagenberg.at:5001`
-- Digital4Grids: `eddie-worker.projekte.fh-hagenberg.at:5002`
-- Flexidao: `eddie-worker.projekte.fh-hagenberg.at:5003`
-- Eta+: `eddie-worker.projekte.fh-hagenberg.at:5004`
+- University Vienna: `eddie-demo.projekte.fh-hagenberg.at:5001`
+- Digital4Grids: `eddie-demo.projekte.fh-hagenberg.at:5002`
+- Flexidao: `eddie-demo.projekte.fh-hagenberg.at:5003`
+- Eta+: `eddie-demo.projekte.fh-hagenberg.at:5004`
+
+Detailed information about the currently used Kafka topics can be found [in the Kafka section of our Framework Documentation](https://eddie-web.projekte.fh-hagenberg.at/framework/2-integrating/KAFKA.html).
 
 ### Postgres
 The Postgres database is used by EDDIE Core to store data.
@@ -129,7 +147,7 @@ The simplest possible configuration looks like this:
 contexts:
   default:
     brokers:
-      - eddie-worker.projekte.fh-hagenberg.at:5001 # TODO: replace port to your Kafka instance port
+      - eddie-demo.projekte.fh-hagenberg.at:5001 # TODO: replace port to your Kafka instance port
     sasl:
       enabled: true
       username: # REPLACE ME
@@ -146,18 +164,18 @@ First of all you have to configure your Java installation to trust our CA, this 
 Linux:
 ```bash
 cd $JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
-keytool -keystore ../lib/security/cacerts -import -alias eddie-worker.projekte.fh-hagenberg.at -file path-to-downloaded-ca # Replace path to root ca
+keytool -keystore ../lib/security/cacerts -import -alias eddie-demo.projekte.fh-hagenberg.at -file path-to-downloaded-ca # Replace path to root ca
 ```
 Powershell (not verified):
 ```bash
 cd $env:JAVA_HOME # Assuming your JAVA_HOME is configured, otherwise use the path to your java installation
-keytool.exe -keystore "../lib/security/cacerts" -import -alias eddie-worker.projekte.fh-hagenberg.at -file "path-to-downloaded-ca"
+keytool.exe -keystore "../lib/security/cacerts" -import -alias eddie-demo.projekte.fh-hagenberg.at -file "path-to-downloaded-ca"
 ```
 
 Then you can configure your configurations in your `kafka-consumer.properties` file:
 ```yaml
 # General
-bootstrap.servers=eddie-worker.projekte.fh-hagenberg.at:5001 # TODO: replace port to your Kafka instance port
+bootstrap.servers=eddie-demo.projekte.fh-hagenberg.at:5001 # TODO: replace port to your Kafka instance port
 group.id=univie-kafka-client-group # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
 client.id=univie-kafka-client # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
 
@@ -231,7 +249,7 @@ internal static class Program
         var consumerConfig = new ConsumerConfig
         {
             // General
-            BootstrapServers = "eddie-worker.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
+            BootstrapServers = "eddie-demo.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
             GroupId = "univie-kafka-client-group", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
             ClientId = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
 
@@ -274,7 +292,7 @@ from kafka import KafkaConsumer
 consumer = KafkaConsumer(
     'validated-historical-data',
     # General
-    bootstrap_servers='eddie-worker.projekte.fh-hagenberg.at:5001', # TODO: replace port to your Kafka instance port
+    bootstrap_servers='eddie-demo.projekte.fh-hagenberg.at:5001', # TODO: replace port to your Kafka instance port
     group_id='univie-kafka-client-group', # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
     client_id='univie-kafka-client', # TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
 
@@ -310,7 +328,7 @@ open Confluent.Kafka
 let consumerConfig =
     ConsumerConfig(
         // General
-        BootstrapServers = "eddie-worker.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
+        BootstrapServers = "eddie-demo.projekte.fh-hagenberg.at:5001", // TODO: replace port to your Kafka instance port
         GroupId = "univie-kafka-client-group", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
         ClientId = "univie-kafka-client", // TODO: replace prefix with your prefix (univie,d4g,flexidao,etaplus)
 
