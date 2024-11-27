@@ -101,6 +101,9 @@ core:
     datasource: "config"
   adminConsole:
     enabled: false
+  outboundConnectors:
+    kafka:
+      format: "xml"
 
 regionConnectors:
   atEda:
