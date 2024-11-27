@@ -1,0 +1,204 @@
+ghcrImagePullSecrets:
+  name: "ghcr-secret"
+
+ingress:
+  basePath: ""
+  host: "localhost"
+  tls:
+    enabled: "false"
+    clusterIssuer: ""
+
+postgres:
+  replicaCount: 0
+  database: "eddie"
+  encryptedPassword: ""
+  encryptedUsername: ""
+  version: "latest"
+  port: 5432
+  storageSize: "1Gi"
+
+kafka:
+  replicaCount: 0
+  storageSize: "5Gi"
+  version: "3.6"
+  externalPort: 9094
+  adminPassword: "admin"
+  sslStores:
+    secretName: ""
+    keystore:
+      encryptedPassword: ""
+    truststore:
+      encryptedPassword: ""
+  topics:
+    - name: permission-market-documents
+      replicationFactor: 1
+      partitions: 1
+    - name: validated-historical-data
+      replicationFactor: 1
+      partitions: 1
+    - name: terminations
+      replicationFactor: 1
+      partitions: 1
+    - name: accounting-point-market-documents
+      replicationFactor: 1
+      partitions: 1
+    - name: raw-data-in-proprietary-format
+      replicationFactor: 1
+      partitions: 1
+    - name: status-messages
+      replicationFactor: 1
+      partitions: 1
+  users:
+    - name: eddie-core
+      password: eddie-core
+      consumeTopics:
+        - name: validated-historical-data
+          group: eddie-core
+        - name: permission-market-documents
+          group: eddie-core
+        - name: terminations
+          group: termination-group
+      produceTopics:
+        - name: validated-historical-data
+        - name: permission-market-documents
+        - name: terminations
+        - name: accounting-point-market-documents
+        - name: raw-data-in-proprietary-format
+        - name: status-messages
+    - name: example-app
+      password: example-app
+      consumeTopics:
+        - name: validated-historical-data
+          group: example-app-vhd
+        - name: permission-market-documents
+          group: example-app-status
+      produceTopics:
+        - name: validated-historical-data
+        - name: permission-market-documents
+        - name: terminations
+
+exampleApp:
+  replicaCount: 0
+  version: "latest"
+  kafkaUser:
+    username: "example-app"
+    password: "example-app"
+
+emqx:
+  replicaCount: 0
+  version: "5.6"
+
+core:
+  replicaCount: 0
+  version: "latest"
+  encryptedJwtHmacSecret: ""
+  ponton:
+    storageSize: "1Gi"
+  kafkaUser:
+    username: "eddie-core"
+    password: "eddie-core"
+  dataNeedsConfig:
+    datasource: "config"
+  adminConsole:
+    enabled: false
+  outboundConnectors:
+    kafka:
+      format: "xml"
+
+regionConnectors:
+  atEda:
+    enabled: "false"
+    eligiblePartyId: ""
+    pontonMessenger:
+      adapter:
+        id: ""
+        version: ""
+      hostname: ""
+      apiEndpoint: ""
+      port: ""
+      folder: ""
+      encryptedUsername: ""
+      encryptedPassword: ""
+
+  fiFingrid:
+    enabled: "false"
+    apiUrl: ""
+    organisation:
+      name: ""
+      user: ""
+    keystore:
+      secretName: ""
+      encryptedPassword: ""
+      key:
+        encryptedAlias: ""
+        encryptedPassword: ""
+
+  frEnedis:
+    enabled: "false"
+    polling: ""
+    basePath: ""
+    client:
+      encryptedId: ""
+      encryptedSecret: ""
+
+  dkEnerginet:
+    enabled: "false"
+    customer:
+      client:
+        id: ""
+        basePath: ""
+    polling: ""
+    retry: ""
+
+  aiida:
+    enabled: "false"
+    customer:
+      id: ""
+    bcrypt-strength: ""
+    mqtt:
+      server-uri: ""
+      username: ""
+      password: ""
+
+  esDatadis:
+    enabled: "false"
+    encryptedUsername:
+    encryptedPassword:
+    polling: ""
+    retry: ""
+    basePath: ""
+
+  nlMijnAansluiting:
+    enabled: "false"
+    issuerUrl: ""
+    redirectUrl: ""
+    single:
+      encryptedKeyId: ""
+      scope: ""
+      clientId: ""
+    continuous:
+      encryptedKeyId: ""
+      clientId: ""
+      scope: ""
+    keystore:
+      secretName: ""
+      encryptedPassword: ""
+      key:
+        encryptedAlias: ""
+        encryptedPassword: ""
+
+  usGreenButton:
+    enabled: "false"
+    basePath: ""
+    redirectUrl: ""
+    client:
+      encryptedApiToken: ""
+    encryptedWebhookSecret: ""
+    activationBatchSize: ""
+    clients:
+      - id: ""
+        encryptedSecret: ""
+
+  simulation:
+    enabled: "false"
+

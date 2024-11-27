@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-example-app
+  labels:
+    app: {{ .Release.Name }}-example-app
+    {{- include "eddie.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.exampleApp.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-example-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-example-app
+        {{- include "eddie.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: eddie-example-app
+          image: "ghcr.io/eddie-energy/eddie-example-app:{{ .Values.exampleApp.version }}"
+          ports:
+            - containerPort: 8081
+          env:
+            - name: JDBC_URL
+              value: {{ include "eddie.postgres-url" . }}
+            - name: JDBC_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: username
+            - name: JDBC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: password
+            - name: EDDIE_PUBLIC_URL
+              value: "{{ if eq .Values.ingress.tls.enabled "true" }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "{{ .Release.Name }}-kafka:9094"
+            - name: PUBLIC_CONTEXT_PATH
+              value: "/{{ .Values.ingress.basePath }}/example-app"
+            - name: EXAMPLE_APP_KAFKA_SECURITY_PROTOCOL
+              value: "SASL_PLAINTEXT"
+            - name: EXAMPLE_APP_KAFKA_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: EXAMPLE_APP_KAFKA_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.exampleApp.kafkaUser.username }}' password='{{ .Values.exampleApp.kafkaUser.password }}';"
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}

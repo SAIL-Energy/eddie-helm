@@ -1,0 +1,71 @@
+{{/*
+Metadata for core components
+*/}}
+{{- define "eddie.core.labels" }}
+labels:
+  app: {{ .Release.Name }}-core
+{{- include "eddie.labels" . }}
+{{- end }}
+{{/*
+
+{{/*
+Metadata for emqx components
+*/}}
+{{- define "eddie.emqx.labels" }}
+labels:
+  app: {{ .Release.Name }}-emqx
+{{- include "eddie.labels" . }}
+{{- end }}
+{{/*
+
+Metadata for kafka components
+*/}}
+{{- define "eddie.kafka.labels" }}
+labels:
+  app: {{ .Release.Name }}-kafka
+{{- include "eddie.labels" . }}
+{{- end }}
+
+{{/*
+Metadata for postgres components
+*/}}
+{{- define "eddie.postgres.labels" }}
+labels:
+  app: {{ .Release.Name }}-postgres
+{{- include "eddie.labels" . }}
+{{- end }}
+
+{{/*
+Metadata for eddie components
+*/}}
+{{- define "eddie.labels" }}
+  generator: helm
+  date: {{ now | htmlDate }}
+  chart: {{ .Chart.Name }}
+  version: {{ .Chart.Version }}
+{{- end }}
+
+{{/*
+Helper to build the postgres Url
+*/}}
+{{- define "eddie.postgres-url" -}}
+"jdbc:postgresql://{{ .Release.Name }}-postgres:{{ .Values.postgres.port }}/{{ .Values.postgres.database }}"
+{{- end }}
+
+{{/*
+Helper to construct kafka client users
+*/}}
+{{- define "eddie.kafka-client-users" -}}
+admin;{{- range $index, $user := .Values.kafka.users -}}
+  {{- if $index }};{{ end -}}{{ $user.name }}
+{{- end }}
+{{- end }}
+
+{{/*
+Helper to construct kafka client passwords
+*/}}
+{{- define "eddie.kafka-client-passwords" -}}
+{{ .Values.kafka.adminPassword}};{{- range $index, $user := .Values.kafka.users -}}
+  {{- if $index }};{{ end -}}{{ $user.password }}
+{{- end }}
+{{- end }}

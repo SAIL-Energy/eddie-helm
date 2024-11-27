@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-core
+  {{- include "eddie.core.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.core.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-core
+  template:
+    metadata:
+    {{- include "eddie.core.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: eddie-core
+          image: "ghcr.io/eddie-energy/eddie:{{ .Values.core.version }}"
+          volumeMounts:
+            {{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
+            - name: data-needs-volume
+              mountPath: /opt/core/config/data-needs.json
+              subPath: data-needs.json
+            {{- end }}
+            - name: ponton
+              mountPath: /opt/ponton
+            {{- include "eddie.region-connectors.fi-fingrid.volumeMount" . | indent 12 }}
+            {{- include "eddie.region-connectors.nl-mijn-aansluiting.volumeMount" . | indent 12 }}
+          ports:
+            - containerPort: 8080
+              name: api
+            - containerPort: 9090
+              name: outbound
+          env:
+            - name: EDDIE_PUBLIC_URL
+              value: "{{ if eq .Values.ingress.tls.enabled "true" }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
+            - name: EDDIE_JWT_HMAC_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-core-secret
+                  key: jwtHmacSecret
+            - name: EDDIE_DATA_NEEDS_CONFIG_DATA_NEED_SOURCE
+              value: {{ .Values.core.dataNeedsConfig.datasource }}
+            {{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
+            - name: EDDIE_DATA_NEEDS_CONFIG_FILE
+              value: "./config/data-needs.json"
+            {{- end }}
+            - name: SPRING_DATASOURCE_URL
+              value: {{ include "eddie.postgres-url" . }}
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-postgres-secret
+                  key: password
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: /{{ .Values.ingress.basePath }}/eddie
+              value: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/eddie
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "{{ .Release.Name }}-kafka:9094"
+            - name: REGION_CONNECTOR_SIM_ENABLED
+              value: {{ .Values.regionConnectors.simulation.enabled | quote }}
+            {{- include "eddie.region-connectors.at-eda.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.fr-enedis.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.es-datadis.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.us-green-button.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.nl-mijn-aansluiting.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.fi-fingrid.envs" . | indent 12 }}
+            - name: KAFKA_SECURITY_PROTOCOL
+              value: "SASL_PLAINTEXT"
+            - name: KAFKA_SASL_MECHANISM
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_SASL_JAAS_CONFIG
+              value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.core.kafkaUser.username }}' password='{{ .Values.core.kafkaUser.password }}';"
+            - name: OUTBOUND_CONNECTOR_ADMIN_CONSOLE_ENABLED
+              value: {{ .Values.core.adminConsole.enabled | quote }}
+            - name: OUTBOUND_CONNECTOR_KAFKA_FORMAT
+              value: {{ .Values.core.outboundConnectors.kafka.format | quote }}
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}
+
+      volumes:
+        {{- if eq .Values.core.dataNeedsConfig.datasource "config" }}
+        - name: data-needs-volume
+          configMap:
+            name: data-needs-configmap
+        {{- end }}
+        - name: ponton
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-core-ponton-pvc
+        {{- include "eddie.region-connectors.fi-fingrid.volume" . | indent 8 }}
+        {{- include "eddie.region-connectors.nl-mijn-aansluiting.volume" . | indent 8 }}

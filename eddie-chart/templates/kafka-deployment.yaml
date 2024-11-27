@@ -1,0 +1,138 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-kafka
+  {{- include "eddie.kafka.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.kafka.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-kafka
+  template:
+    metadata:
+    {{- include "eddie.kafka.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: kafka
+          image: "docker.io/bitnami/kafka:{{ .Values.kafka.version }}"
+          ports:
+            - containerPort: 9092
+              name: container
+            - containerPort: 9093
+              name: controller
+            - containerPort: 9094
+              name: cluster
+            - containerPort: {{ .Values.kafka.externalPort }}
+              name: external
+          volumeMounts:
+            - name: kafka-security-config-volume
+              mountPath: /etc/kafka/
+            {{- if .Values.kafka.sslStores.secretName }}
+            - name: kafka-ssl-stores
+              mountPath: /opt/bitnami/kafka/config/certs/
+              readOnly: true
+            {{- end }}
+            - name: kafka-data
+              mountPath: /bitnami/kafka/data/
+          env:
+            # KRaft settings
+            - name: KAFKA_CFG_NODE_ID
+              value: "0"
+            - name: KAFKA_CFG_PROCESS_ROLES
+              value: "controller,broker"
+            - name: KAFKA_CFG_CONTROLLER_QUORUM_VOTERS
+              value: "0@localhost:9093"
+            # Listeners
+            - name: KAFKA_CFG_LISTENERS
+              value: "INTERNAL://:9092,CONTROLLER://:9093,CLUSTER://:9094,EXTERNAL://:{{ .Values.kafka.externalPort }}"
+            - name: KAFKA_CFG_ADVERTISED_LISTENERS
+              value: "INTERNAL://localhost:9092,CLUSTER://{{ .Release.Name }}-kafka:9094,EXTERNAL://{{ .Values.ingress.host }}:{{ .Values.kafka.externalPort }}"
+            - name: KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INTERNAL:SASL_PLAINTEXT,CONTROLLER:SASL_PLAINTEXT,CLUSTER:SASL_PLAINTEXT,EXTERNAL:SASL_SSL"
+            - name: KAFKA_CFG_CONTROLLER_LISTENER_NAMES
+              value: "CONTROLLER"
+            - name: KAFKA_CFG_INTER_BROKER_LISTENER_NAME
+              value: "EXTERNAL"
+            # Big messages produced for validated historical data
+            # See: https://stackoverflow.com/questions/63528508/recordtoolargeexception-in-kafka
+            - name: KAFKA_CFG_SOCKET_RECEIVE_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_CFG_SOCKET_SEND_BUFFER_BYTES
+              value: "102400"
+            - name: KAFKA_CFG_SOCKET_REQUEST_MAX_BYTES
+              value: "104857600"
+            - name: KAFKA_CFG_MESSAGE_MAX_BYTES
+              value: "104857600"
+            - name: KAFKA_CFG_SASL_ENABLED_MECHANISMS
+              value: "SCRAM-SHA-512,PLAIN"
+            - name: KAFKA_CFG_SUPER_USERS
+              value: "User:admin"
+            - name: KAFKA_CLIENT_USERS
+              value: "{{- include "eddie.kafka-client-users" . }}"
+            - name: KAFKA_CLIENT_PASSWORDS
+              value: "{{- include "eddie.kafka-client-passwords" . }}"
+            - name: KAFKA_OPTS
+              value: "-Djava.security.auth.login.config=/etc/kafka/kafka_server_jaas.conf"
+            - name: KAFKA_CFG_AUTHORIZER_CLASS_NAME
+              value: "org.apache.kafka.metadata.authorizer.StandardAuthorizer"
+            - name: KAFKA_CFG_SASL_MECHANISM_CONTROLLER_PROTOCOL
+              value: "PLAIN"
+            - name: KAFKA_CFG_SASL_MECHANISM_EXTERNAL_PROTOCOL
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL
+              value: "SCRAM-SHA-512"
+            - name: KAFKA_CONTROLLER_USER
+              value: "admin"
+            - name: KAFKA_CONTROLLER_PASSWORD
+              value: "{{ .Values.kafka.adminPassword }}"
+            - name: KAFKA_CFG_SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-kafka-secret
+                  key: keystorePassword
+            - name: KAFKA_CFG_SSL_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Release.Name }}-kafka-secret
+                  key: truststorePassword
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - sh
+                  - -c
+                  - |
+                    # Temporary Solution
+                    rm /bitnami/kafka/data/.lock
+
+                    # Block until Kafka is available
+                    kafka-topics.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties --list
+
+                    {{- range .Values.kafka.topics }}
+                    kafka-topics.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties --create --if-not-exists --topic {{ .name }} --replication-factor {{ .replicationFactor }} --partitions {{ .partitions }}
+                    {{- end }}
+
+                    {{- range .Values.kafka.users }}
+                      {{- $user := . }}
+                      {{- range .consumeTopics }}
+                    kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
+                                  --add --allow-principal "User:{{ $user.name }}" --consumer --topic "{{ .name }}" --group "{{ .group }}" --resource-pattern-type prefixed
+                      {{- end }}
+                      {{- range .produceTopics }}
+                    kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
+                                  --add --allow-principal "User:{{ $user.name }}" --producer --topic "{{ .name }}" --resource-pattern-type prefixed
+                      {{- end }}
+                    {{- end }}
+      volumes:
+        - name: kafka-security-config-volume
+          configMap:
+            name: kafka-security-configmap
+        {{- if .Values.kafka.sslStores.secretName }}
+        - name: kafka-ssl-stores
+          secret:
+            secretName: {{ .Values.kafka.sslStores.secretName }}
+        {{- end }}
+        - name: kafka-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-kafka-pvc
+

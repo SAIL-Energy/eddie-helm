@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-ingress
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-ingress
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+  {{- if eq .Values.ingress.tls.enabled "true" }}
+    cert-manager.io/cluster-issuer: {{ .Release.Name }}-letsencrypt-prod
+  {{- end }}
+
+spec:
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/example-app
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-example-app
+                port:
+                  number: 8081
+          - path: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/eddie
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-core
+                port:
+                  number: 8080
+          {{- if eq .Values.core.adminConsole.enabled true }}
+          - path: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/eddie/outbound-connectors
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Release.Name }}-core
+                port:
+                  number: 9090
+          {{- end }}
+{{- if eq .Values.ingress.tls.enabled "true"}}
+  tls:
+  - hosts:
+    - {{ .Values.ingress.host }}
+    secretName: {{ .Release.Name }}-tls
+{{- end }}

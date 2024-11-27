@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-kafka-load-balancer
+  {{- include "eddie.kafka.labels" . | indent 2 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-kafka
+  type: LoadBalancer
+  ports:
+    - name: kafka-load-balancer
+      port: {{ .Values.kafka.externalPort }}
+      targetPort: {{ .Values.kafka.externalPort }}

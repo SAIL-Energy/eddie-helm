@@ -1,0 +1,14 @@
+# Macos 
+.DS_Store
+
+# IntelliJ
+.idea
+
+# Helm Templating Outputs
+/out
+
+# For local cluster setup
+eddie-chart/values-hardening.yaml
+
+*.jks
+*.pem

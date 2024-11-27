@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-emqx
+  {{- include "eddie.emqx.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.emqx.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-emqx
+  template:
+    metadata:
+    {{- include "eddie.emqx.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: postgres
+          image: "emqx/emqx:{{ .Values.emqx.version }}"
+          ports:
+            - name: mqtt
+              containerPort: 1883
+            - name: mqttssl
+              containerPort: 8883
+            - name: dashboard
+              containerPort: 18083
+          env:
+            - name: EMQX_NAME
+              value: emqx_node
