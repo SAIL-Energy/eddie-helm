@@ -1,7 +1,6 @@
 # EDDIE Demo Instances User Documentation (v1)
 For the development of demonstrator applications we (FH) will provide a dedicated EDDIE instance for each partner.
 ***Please note, that the demo instances are still in an experimental phase, and we cannot assure, that your data will be persisted permanently.***
-***For instance, we are planning on migrating to a new server very soon, which will cause data loss.***
 If you are experiencing any issues, please create Bug Tickets in our [GitHub project](https://github.com/eddie-energy/eddie-helm/issues/new?assignees=&labels=bug&projects=&template=bug.md&title=).
 When you received this documentation, your developer accounts should already have permission to create Bugs, otherwise please contact us.
 
