@@ -1,8 +1,6 @@
 # EDDIE Demo Instances User Documentation (v1)
 For the development of demonstrator applications we (FH) will provide a dedicated EDDIE instance for each partner.
 ***Please note, that the demo instances are still in an experimental phase, and we cannot assure, that your data will be persisted permanently.***
-If you are experiencing any issues, please create Bug Tickets in our [GitHub project](https://github.com/eddie-energy/eddie-helm/issues/new?assignees=&labels=bug&projects=&template=bug.md&title=).
-When you received this documentation, your developer accounts should already have permission to create Bugs, otherwise please contact us.
 
 Each EDDIE instance currently consists of the following components:
 - EDDIE Core
@@ -12,6 +10,11 @@ Each EDDIE instance currently consists of the following components:
 Alternatively to Kafka, EDDIE supports AMQP (Advanced Message Queuing Protocol).
 Currently, our deployment does not include an AMQP broker.
 If you are hosting an AMQP supporting broker e.g. RabbitMQ yourself, please contact us, so we can configure your EDDIE instance to use this broker.
+
+## Bugs
+If you are experiencing any issues, please create Bug Tickets in our [GitHub project using this link](https://github.com/eddie-energy/eddie-helm/issues/new?assignees=&labels=bug&projects=&template=bug.md&title=).
+When you received this documentation, your developer accounts should already have permission to create Bugs, otherwise please contact us.
+We will try to fix your bugs as fast as possible and will keep you updated with comments within the created GitHub issues.
 
 ## EDDIE Core
 As the name suggests, EDDIE Core contains the major logic of the EDDIE framework. 
