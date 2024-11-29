@@ -56,18 +56,14 @@ You can embed the EDDIE Connect Button into your application with the following 
 </script>
 </body>
 ```
-<!---
 The full code examples can be viewed here:
 - [Connect Button with Data Needs Dropdown](./demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
 - [Connect Button with fixed Data Need](./demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
-- [Connect Button with Data Needs Dropdown](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-dataneeds-dropdown.html)
-- [Connect Button with fixed Data Need](https://github.com/eddie-energy/eddie-helm/blob/main/demo-examples/ConnectButton/button-demo-fixed-dataneed.html)
---->
 
 ### Region Connectors
 To get energy data, select the region connector for your country and follow the instructions shown in the popup window.
 The simplest way to get started, is by using the Simulation region connector.
-When selecting the Simulation Region Connector, you are redirected to an Simulation Interface, where you can publish data that is then available on the outbound connectors e.g. Kafka.
+When selecting the Simulation Region Connector, you are redirected to the Simulation Interface, where you can publish data that is then available on the outbound connectors e.g. Kafka.
 
 ### Admin Console
 In the future you can observe the states of your permission requests and manage data needs in the Admin console.
@@ -125,7 +121,13 @@ Currently, the deployment contains one single Kafka Broker for each instance.
 The Kafka Broker is running in KRaft mode and external communication is secured with SASL_SSL.
 Therefore, communication is encrypted, and you need an account for authentication to access data.
 Furthermore, we are using a self-signed certificate for SSL, which means you need to trust our self-signed certificate manually, as described in the following examples.
-Your Kafka brokers are reachable at (we will send you your credentials):
+We will send you your SASL credentials and your users will have permission to all consumer groups ***prefixed*** with:
+- University Vienna: `univie-kafka-client-group`
+- Digital4Grids: `d4g-kafka-client-group`
+- Flexidao: `flexidao-kafka-client-group`
+- Eta+: `etaplus-kafka-client-group`
+ 
+Your Kafka brokers are reachable at:
 - University Vienna: `eddie-demo.projekte.fh-hagenberg.at:5001`
 - Digital4Grids: `eddie-demo.projekte.fh-hagenberg.at:5002`
 - Flexidao: `eddie-demo.projekte.fh-hagenberg.at:5003`
