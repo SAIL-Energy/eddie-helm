@@ -99,11 +99,6 @@ core:
     password: "eddie-core"
   dataNeedsConfig:
     datasource: "config"
-  adminConsole:
-    enabled: false
-  outboundConnectors:
-    kafka:
-      format: "xml"
 
 regionConnectors:
   atEda:
@@ -202,3 +197,13 @@ regionConnectors:
   simulation:
     enabled: "false"
 
+outboundConnectors:
+  kafka:
+    format: "xml"
+
+  adminConsole:
+    enabled: "false"
+    login:
+      enabled: "false"
+      username: ""
+      encodedPassword: ""

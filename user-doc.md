@@ -66,9 +66,13 @@ The simplest way to get started, is by using the Simulation region connector.
 When selecting the Simulation Region Connector, you are redirected to the Simulation Interface, where you can publish data that is then available on the outbound connectors e.g. Kafka.
 
 ### Admin Console
-In the future you can observe the states of your permission requests and manage data needs in the Admin console.
-For now, we had to disable the Admin Console for your deployments, because the Admin Console is currently not properly secured.
-We are already working on securing the Admin Console and will keep you updated.
+You can observe the status of your Permission Requests using the Admin Console.
+The Admin Console is currently in development, and it will gain many new features in the future (data need management, region-connector health, observability).
+You can access the Admin Console on the following URLs **with the user** `admin` **and the password of your Kafka user**:
+- University Vienna: `https://eddie-demo.projekte.fh-hagenberg.at/univie/eddie/outbound-connectors/admin-console`
+- Digital4Grids: `https://eddie-demo.projekte.fh-hagenberg.at/d4g/eddie/outbound-connectors/admin-console`
+- Flexidao: `https://eddie-demo.projekte.fh-hagenberg.at/flexidao/eddie/outbound-connectors/admin-console`
+- Eta+: `https://eddie-demo.projekte.fh-hagenberg.at/etaplus/eddie/outbound-connectors/admin-console`
 
 ### Supported Features
 Depending on the configuration of your EDDIE instance, the region connectors can support different features.
