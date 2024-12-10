@@ -10,5 +10,10 @@
 # For local cluster setup
 eddie-chart/values-hardening.yaml
 
+# Ignore created pem files and jks files (so no private keys can be pushed accidentally)
 *.jks
 *.pem
+
+# Manually allow pushing our root ca and truststore
+!kafka-tls/root-ca/root-ca-cert.pem
+!kafka-tls/root-ca/root-ca-truststore.jks
