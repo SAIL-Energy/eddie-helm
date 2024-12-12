@@ -87,3 +87,9 @@ seal-secret:
 			--name $(RELEASE_NAME)-$(SECRET_NAME) | \
 			xargs \-I{} yq eval -i '.$(VALUE) = "{}"' \
 			./eddie-chart/values-$(NAMESPACE).yaml
+
+install-monitoring:
+	helm install $(RELEASE_NAME)-monitoring -n monitoring ./eddie-monitoring-chart
+
+upgrade-monitoring:
+	helm upgrade $(RELEASE_NAME)-monitoring -n monitoring ./eddie-monitoring-chart

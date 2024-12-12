@@ -78,7 +78,12 @@ spec:
               value: "SCRAM-SHA-512"
             - name: KAFKA_SASL_JAAS_CONFIG
               value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.core.kafkaUser.username }}' password='{{ .Values.core.kafkaUser.password }}';"
-
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://{{ .Values.otel.collector.name }}.{{ .Values.otel.collector.namespace }}.svc.cluster.local:4317"
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
+            - name: OTEL_LOGS_EXPORTER
+              value: "otlp"
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
 

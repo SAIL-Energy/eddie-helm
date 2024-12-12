@@ -207,3 +207,6 @@ outboundConnectors:
       enabled: "false"
       username: ""
       encodedPassword: ""
+
+otel:
+  enabled: false

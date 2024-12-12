@@ -1,0 +1,11 @@
+{{- if eq .Values.otel.enabled true }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-otel-collector
+spec:
+  type: ExternalName
+  externalName: {{ .Values.otel.collector.name }}.{{ .Values.otel.collector.namespace }}.svc.cluster.local
+  ports:
+  - port: 4317
+  {{- end }}

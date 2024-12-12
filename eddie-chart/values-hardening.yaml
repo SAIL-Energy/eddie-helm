@@ -27,7 +27,7 @@ emqx:
   replicaCount: 0
 core:
   replicaCount: 1
-  version: "latest"
+  version: "snapshot-otel20241210"
   encryptedJwtHmacSecret: "AgA0+rrAa2F+yXkHUHZa8aoWhaQenkwY8EW8bCbxnJM3BVQx646c37FP6a3LJJ+cN1kaHEgRBVSXKEiLzIf4sQdl1vJJPXA31uo0o9FG3peX5CsC/MQjXs0OBtNTTBPPpwiH4t1eWVU5KSAc71EiRQbJmovYvEofatPmavNasAzdCqjDat5CBb0lvM4suAV+L/GplWq0TzcdM6aBCvrBAf1v81+B+G283pBuVG5w/2e3gzRTnO0JUqAOB8+J7G2pwzD9YwK8QoMFWjL2NUjZsUod8kYt9fFxf6WMxVbjGpez6x+y1qLNycQYHutNb6D9IFhzMT8ELjWKy1S2EY2/Z8y48TmvJNV5lz/bREZArcGlAwG1rn2LKhWWWjT9B0PQ209fidIkOiPTI1YQ+pBalbRiM2VrmEEwMbR8l2unLygZCFKrKnZvkp1+E1x2r/b1zkghShGBhzgqz9PdJVQqRTTuTOkRv9hPm8DfwB0WkKUQz+PEMY6Z6E05xTSExf17c2XAo+U+isjzzsFzMizYtf3nlCFeKhyACXgH9cfDPwUAa3uoe9Nagh/2/JPwD0Ehc7K8A5tNqfFwb3PDrujqxH0hNarZY7/yaghz9omn5hjqhk/2pSoYPoa4defcHYv3OQpSriOviLjm/LBPocxC25ZSZKACzn3rB+lXdLZmFJUFNpDoTU8jksGO+pnFNb0/3CTYRlwh9ykOgK0L+G6aFf8UavM9fhokAI94YXqisksu9l9TEOnn564dvNt3Gw=="
 regionConnectors:
   atEda:
@@ -101,3 +101,17 @@ regionConnectors:
         encryptedSecret: "AgA3qHJdHXiO4NFkEy5fqHQ5BzSeZ1rv4lI6jLwfH3eH3yVONIcpTfiMriZyBTTEGIUPBOBm4rgbEfqGagxFg70e794JKcSknoDp8JMXJhMHy2lHbsOvX1ppo8mkwayMNhv2D0W9wXZ3BhcRPmRKchuU+gSQ52hCmqBd3ATFbBvi5ocz/cRv2P4SSKLZNuaSOiJCoXuS/bTcZvx92IM2ZsjqzE04N4dbwRHXv1wMTyNKkh6tnE4++ZGjY7Bw+xJaXm6EKyx7by54Ma5nw1k2gj4qvSAd3KRzCv76Kad5XZL2y2YwSb/2efX+C5hL/l/KRXLM5SFugU54qwLDNWcjIWLk0lJzxgug+c2B9caKp7oHmEPogk7Xkb1+aopk/rcdiv8BaLPWNYqHdUi1i/clai0/Hokso/s8X6/lPRKWJ9lDPETpIYKrNuOhPtpjQVL+Ox5j0o5AZF7saAPXKNA+6JqIKxgKgdPQtk9BeydofuS1d2c7g9yuEDuK4t7/bj3Kil7hhQ7ITqB9JrRMjAZm6IDtH9sCEXcqk4q8/xhINo0jVqdKH44La9dThcaj7FBDUUAH899cKI91JihbCV1N4JOGT4tu03Ub9wpcfS6aM2CO7+XVnC5bP7zi4rsz5h1IHf5kfHbHSXLLub/Rvv/wRy2P6OT5nS1MihI697fIeWIJ4N94ihP01Rq8OH3ExreQvpkbFQJxaKnKhXfOKWgV5sgQVCGIrzt56Sf6Mq8C7YGjwf2ILsXw4xAFBDnbO4fJrKHALy4rHT1O1pnlMXHyq1oj"
   simulation:
     enabled: "true"
+
+outboundConnectors:
+  adminConsole:
+    enabled: "true"
+    login:
+      enabled: "true"
+      username: "admin"
+      encodedPassword: "$2a$10$3OFtc4XjJcMTxTZIA6HkM.6UAVSrQ9G.pBjBD3xKEYFg0llBsi342"
+
+otel:
+  enabled: true
+  collector:
+    name: "eddie-monitoring-collector"
+    namespace: "monitoring"
