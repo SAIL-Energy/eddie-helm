@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-demo-button
+  labels:
+    app: {{ .Release.Name }}-demo-button
+    {{- include "eddie.labels" . | indent 2 }}
+spec:
+  replicas: {{ .Values.demoButton.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-demo-button
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-demo-button
+        {{- include "eddie.labels" . | indent 6 }}
+    spec:
+      containers:
+        - name: eddie-demo-button
+          image: "ghcr.io/eddie-energy/eddie-demo-button:{{ .Values.demoButton.version }}"
+          ports:
+            - containerPort: 80
+          env:
+            - name: EDDIE_CORE_URL
+              value: "{{ if eq .Values.ingress.tls.enabled "true" }}https{{ else }}http{{ end }}://{{ .Values.ingress.host }}/{{ .Values.ingress.basePath }}/eddie"
+
+      imagePullSecrets:
+        - name: {{ .Values.ghcrImagePullSecrets.name }}
