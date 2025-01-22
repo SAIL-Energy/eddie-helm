@@ -40,15 +40,6 @@ spec:
                 port:
                   number: 9090
           {{- end }}
-          {{- if eq .Values.demoButton.replicaCount gt 0 }}
-          - path: {{ if .Values.ingress.basePath }}/{{ .Values.ingress.basePath }}{{ end }}/demo-button
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ .Release.Name }}-demo-button
-                port:
-                  number: 80
-          {{- end }}
 {{- if eq .Values.ingress.tls.enabled "true"}}
   tls:
   - hosts:
