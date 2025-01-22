@@ -5,19 +5,20 @@ sealed-secrets:
     create: true
     clusterRoleName: "d4g-secrets-unsealer"
 ingress:
-  host: "eddie-worker.projekte.fh-hagenberg.at"
+  host: "eddie-demo.projekte.fh-hagenberg.at"
   basePath: "d4g"
   tls:
     enabled: "true"
     clusterIssuer: "letsencrypt-prod"
 postgres:
   replicaCount: 1
+  storageSize: "25Gi"
   encryptedUsername: "AgA4VPsmdGrpXMuczxIMJNPrq6PuPbWJSlZM38lN0Shwjuv8NftfZI/yzzTwn9jHl+bHGVsjrBI3rJ6XMI+WcSC8PrnR52t4lZ92x8wKWVZq3adivHVT8E0iO7EVI8Hk5Q98dMc2GjjRO7li/XedO/fC1iYyeT1G0hf0HaYQTG4VJlZCgyGTyGai8EDft08NiOBh1t59WSVkUsyubKjgpg55OYHQB9Zce7vTdQ5DrWPzOVp6K2io/b3XDrcOy27G2uXXrXX3yAxjNHwapRkA0A84Lctvu+7RzR35TbL5uhFRkOlW5kd3+fkqGtp3o68jxeuPehFOYch12H+ZZK0YpPmbso07BIP/scH6OCght2jPD6spF3KnpvczAvFMW+0C/b9LVAZj3WIfm9InI14zHyL2b5mbjCUFJddkArkMRSABROTW0KY4b15dhCRY7P9pD00Ow6eM9oTOS7wJhYEf+Glw8W27n9vEDjYlSiIsopL+h6Hpe9EB3Z/xvKZXvesCElk16KtRb9KgIo8PbBAn7YbBlcMTGiRmbCbTU3H8azxr+QsoDGg+WSmlO66osSLCPxWGqRR2jmIGPuLprDa+7wZIONmGqpSMmdSpId8JglncgR5/7hTQPzf/s8rJctzqDk2Fpho1Ohd2Vclwklwjt5bxC5qK2jlEHKLu5LNfoq2Yjd8pEy8Dmq9o6vK5bnGbENkHRGMXGg=="
   encryptedPassword: "AgAS+M/674oVKLca7mM3/5fojB5RiyZ19t+kwzW4Qo50v2QRnzS+GrXywKNpQU0f6Vdl+JIajkPa6FW5OWVNeGEsX4Zk5/LE1WQBWjmth+0v8se02Nyf5nHvcjF2QSztj3JKnkJbzXzTub4Rg+IakEhfV+M1NPjCyyEfKUJJMcAjf97qI++tP5ZcIYnGHjSpagujQWpT3QxCk6+kxwwkPpJ0+yOkndXGwkLf1rP8wh8WIg3eviwl8y+u2R8JjxKNftmwqiypGwBQQtUh2FvpfyQMhw+hb87oool0+Pf3lB0GZPR7gfeXZXD8ecT7Vh3sBJ/OzPABmeh6a4bogDe0797i7neRvABQuFvKnwZtIeYRH4eZCV9WdGU92B95SH7R61hllQKFvEcsrjlSbk0lM68ktRDyTIPxGrzosTAnIVwiCw618JT1/DOU/Q6r4JP0M0Tl+UZpV5ehbsCJIXuhnnmWvlipxuFMenbe6pDwi0XE6cMudtx/eMah71XdQqFqeEwnkbSRVgOJk0+4zUQJUg009arAawRunNeQblIKGyW8zx7483CMV+srWiBGgZhe43cfyRkk/+Vlv39B9w2q24jedQ1lVHqAO/D2x2sLt00ZkF3ArrfGnWdX4BlO7yWViwO3pfPgd5ymWmaRir/SYJAXPQc5bv5I5ohk/R8Ee/FzJJkuFouGL0mshLev2D8zjXPRs8bbve6uGj33qknvuQ=="
 kafka:
   replicaCount: 1
   externalPort: 5002
-  adminPassword: "14o1e2cuT1Ylz7"
+  storageSize: "25Gi"
   sslStores:
     secretName: "kafka-ssl-stores"
     keystore:
@@ -25,12 +26,17 @@ kafka:
     truststore:
       encryptedPassword: "AgCQ9knTA/ygd2xeaJTmZcMjxhudAEwf67v4OM/lzLYIQoqHEIZtp8dk6T9is1WuIowSgN2X33pU8MxP+KWG/sMJ7VkTeNzUwyBJ3yjn6Fq6ESHleo0WkhmIIPncOghlOdg0p38CPKYT8tIA2UMsDeyin1Bw+KIpSkuCj5NLJ46jR/YFgi48sp+9P2cjo+ehOEiGfMlbrslhivCHZ1sdX1mChGsy5166gRq/xj1MuKFO09QOzf4i+5E/KaMSQtIMLgXfPJkViCKhV8CoQiNISpX1r8wfphAwR4xAv+Ncfp6d5K+DDRJzQ+HsBbILz/nkQb4Sv/yfWYQM4kc0xpNsUZ93+C54o7Ge4a+7GfeMSomucUVwuipvPFg9HCqHa9lBeeVemMFRBQlPxd4r34R3x1GOXuKSOSDBsbQMu9UMvyXHmZnLYjvf0wjoBeXKUMS7edl53OxSLlZgy6UrjDdypcP9mYQwUWqJOR6E38m9F0mAw1cSNo5OZCMn+HOOaoUYKzgNBXnZwJAtuuvX+yhFgW8G3NTs58whaqNaWrCGQOOFuSqIO3j6wwUrp/SOkw9oNmjrJcpZ6jFTruh5dEcvfj4KesZkKHrrrBORugKeEcpESS3GTUEXs9JOVMS0iT444w4zZMYBp4zBbr9md42CfQRNi5mwl1ZGKHYoKIByiGipkouFl2s591X+TuCIXUdTjXsPzo4Ujckm4Tytl8DQ/Q=="
 core:
-  version: "SNAPSHOT-4-20-11-24"
+  version: "release-snapshot20241218"
   replicaCount: 1
+  ponton:
+    storageSize: "25Gi"
   encryptedJwtHmacSecret: "AgB/a0MEe3BoexfQng13YDPDdeF2nN7gSSMB5GiebI4F2ItEd8UTih/d00jc4D4Kb2eeqm/8bmsvhH86P7jmeBDyuN/0zEumuzXbg9WZsHEdNpuwzoIDk1x/7ptlUUzFcyRmbf9TxArDPlg4njNQuF0BcSQsJsuRLI8Hb6BSr44V9Zs1Yj0dssLwaRKYEhzfL4WI7azBNX7bWf+Ws9erBJ1vTwhB1pcxvX31HUMZejbGe08x4LiPq/rjoZMGK0zDm2MjTjh/qj3Ey92jRC1XqrUM4yo0olKNV4ybRFRTaeg4uLHsPuEHsyLyjpZx1YdIgn7XyC993UjgfKhMC3zLQAxHW6CkJlYXmERPm2DS4gG2b+2/GcmbONbKFtQEKU74PwwThhoUZ6fU6cFEvo5CdXd9jo0zEK5BSBTBeKHjY7UoY0v0YexXv4iWSwKFSrbdBKcdLGrqubV/+dIYDZsVBAvi44bfauJAM8o0d9kt6GYpOnPDa6eINvu2A5Vn/Tx+sXW7Dvy92mmNB26gDFEoAQWsa4Nm1lOl8tpX0XxSLOVg8KTiheeiUp2HJ8/XTVn+XI4xFKG4iHjjuMpmzpX3pJFOxbOdwDdUlTKf7YDoTLTS8TawoZf7bOzBDfY6nmHUlHOxtKMjoeoghEdQ1nA8AiYKMUECWhcjGuBNo41Qj7XYwHHiEctxtIpt6qES1epfNqfF3sJ0ucoMQOKpHLUChPsJeyg9j0WP5SpAJqZ5M/Mm/WBzZ+UMloQKovHoCQ=="
+  dataNeedsConfig:
+    datasource: "DATABASE"
+
 exampleApp:
-  replicaCount: 1
-  version: "SNAPSHOT-1-11-11-24"
+  replicaCount: 0
+
 regionConnectors:
   atEda:
     enabled: "true"
@@ -40,8 +46,8 @@ regionConnectors:
         id: "EDDIE-D4G-Adapter"
         version: "1.0.0"
       hostname: "eddie.projekte.fh-hagenberg.at"
-      apiEndpoint: "http://eddie.projekte.fh-hagenberg.at:8443/api"
-      port: "2600"
+      apiEndpoint: "http://eddie.projekte.fh-hagenberg.at:5100/api"
+      port: "5099"
       folder: "/opt/ponton"
       encryptedUsername: "AgBQIETWW3Ia61MHtz51JANTGtlIa2bVSwXIVO/gqh51kw92OIDUVkt8clbcHYM8BsssYj66COjHj+eB04ml/lzf+E9Uv8ij5hFomJZWVxI0l3QcSH8W/dZnvhq03UnNbFUYPp7OFykRoUBQ5BpqUrgdTARd1DQISfd5qDatW/9NkXsoWFCvB5B6Kiihoswab8M+JMnzyGP/4P8o8xHSxWV9iq15qtgJkrD7rIMMyUQoMZFuMvBvtb9y8vPx3S48BxDf870zdfwAi84U9dPWEQDQ3UQWkfEYO2r0yZaEo1acZOMKeZT9Lq6I5pu2eW3HBo6/Sy+fUcbwgBcWVlMZK8lo3xi31RJ5cL+Bd4+DWZeC2yQJQD41bKrkCKJ3v9438AxJ6j/l+8nAd9NnA7S28uiTTE3AdpV5PujAFMFMsNo6DEvSE6gbbnziRnjK+JGgEGT4KE0AEuT/t8g24PtLtzlb2GGqC0dtK8/2iqZuvA55ggCdQJIHf/57uMylFEXzNphG/CNHxHPiaNy3xBc/QBxJA/70gRlsqkTLaoeCg1DnmiTHWX/WH3jT/+IMCOBaxDVacQd6cjCePYGXOh5sacH29N99bdAO9Dqb4S49DBVWIoKcXZYPFeTuFd9HEGtkCRFm3fCgCZOhMsJc0arVlFg9YgCfnz9SmQ+lqJr4mxu4oBRuqEjWKqp4oSl/bis9a68Rg06g"
       encryptedPassword: "AgAaWRAyjjRtfM+gsIa1XNjLZSOfxl8dd4LOo3KLl36ms70lYkRqhYCToIMYu129Vlxu9M1rgCpzvIdU6+HrJrs+YtuT3tvzgqvSq24SGXeKY16kf80PsxQF//qnA0wSWEWCUcZ8kVIkie8eOHl+SsoqEerPYXGzcrGCoRWhpfhaVaJHOyilLk42Mpdhq+oa6R+gyYJ3Ianb+kmtdHLMYJUdpM/2N2sjKspT/+TMLTyrZPm81o6Kl0M/K8nd9ZCiLk4xGQ3M4JTqP/6FlhwGYnZ959irSvPsdPumWFWbCf87lB2SBUCwJrntQfbHtwQ0i3f+fOE/3PxGe4TpG2UyxRi61NN2oFqGvt9H0X4YWl49La1WBPwDDIW2EomLYs6mkzJ83Fd/njFHq5f/nYVgn+Gw2POy4DUzTuHjSqrJj/uMoxFzGLWApn6Rk2FXpBIF27l+wv+omyaDF985UZzStv6q2jaiLe6cK2jVxU6fpiI7HhGOMcrDZ4w1dG/dSZdtngmEU9lF0r2DEltMU30dt3nlwEHwqJ8iugxE/Qhprtuhk/Foj4oXLoNaPb1h6HSJJys+mUNLoeL4rLEOBvzrtteUBKAKNigzshi5DlyKwZ1Psrsx+wYzKf4UcmvICVkNHITHTTbWP5wg4KA02/vP/rbMg7le86cP5TmIYJCyQ+BTXvHrOXAQdAlT7VqZkwk8FgF8+i5XjOiU0ogUj1tU2FWbQA=="
@@ -90,7 +96,7 @@ regionConnectors:
         encryptedAlias: "AgARmKxAgDmQGPY5Ku2CqTucBJ/QkKCCvZQp23hbLlQre9j1//6iMMrgRZJvWxTZRpb49t6UzBjv9b1kPyD+JoywERV+tMMQEFh13vsscIghwaE7B9lE/8jP3CD5zGv7lepYdJOIBh69qeK1zZUMJzGTwLik2fqYcuvmqjmlwVcS5ouYpor5nce0ud3OUhrC1w/zhbttT9X44busKpW3iF8G/LSIZ4q2ai43hpjsNs2StiqTo72WPIM5fI8LFoAzIvZqEOp80m/I8fzu+kviZQxObp7+Bw573G3478Lmonhqe5N6pf+wL75q4GxzwhosGAFKl5qIy1ixfNWSNjG5wlKuJHw1BjmLPcVxVi6U2eofxRBoFTejJKS2HFq0O2flzJNFY6pLLMa0x4KnqGZIVKwwx2YCM/Pu37U94aN5j1s91Z60khXKz3RVEhLFz66KLHwOrdf3qqf4/DwJs50NSm4x5TYgA+wLO9OysZgNdihJYsZJ1OY6CYpnh4YRzcOHPhdiDe6lRCAVwcQPQRjLOoeD24SYjfaR1LocSFb64mN2SQN4HQvpubnyu4zCG0tyOnNrtQBql2tvU2a6XKoE80x9KiygcvCENLU5rW5r6Ps1jK/i5VyS+2M/grc0PBuHKklVkonFg3s+4URxIwKSjhmNlugVU1FztkAroXNppJuaNbk1o/v4oFOU2lcwTqSPKJNtVREA"
         encryptedPassword: "AgByshYP+rz3o91GJccynzn+4yVLr+voPJfmLznzcQ5QyGVyvY9Kqb+uW3HZ3aUJkW4m88JdiIn/aePhuN3G/75DeJdLYWArCBAlZpQQZatYfDIjqdKMePcrLWarM7eSyQ43DcARZ19XU9Yzt7UN+bTElLc/pz2C5+qYnTo94+oIiJlc6g84Rvpy9Orn9OeFOxZfN2xJSubebqG7X/nnqAeTpXoTgUmjDFJhWSz7GYXRbLG1YA6GAPWumTZzShQvk4RQ4RtpBqoLJwwbKn0eRSHPMipeg5QhDBV4FzHmG1Eda25u6+IeIs6IMQmVjBXw4gwibDvjobMrEuQoekLovDWej/wlU016KaWrpqRWYVqzaOyTVPdGje2bQ2VbTtxiRPl3lwI/HCdWrsR4tbdlquNQfRz9a3kKqCi1R36Y7VSE02rOMXUp21eFvLyuLWSrlurHXCLQK5v7l8UkSbFHyO9FSJTUqsYqDeqOtl+G6NBXRDHm3isfYAtNBH8LsihXVzALwaaijKFQyAMjPrutofeKvrerkd/udYX3MQ7kaEaS1ZUT1ihGpkEGEZSh7t5kuoCEQllHx58gsHbJw1+FDWo6/YPBpO5NEtsT0k79LxEuZQWxK3lkyWQ5zMII5V7yW/lZU4ksBTeytcaAYR3Pu6NBsRFy7vW7Y+OVk+t9ADeo8ok0wzl5yZwe96P+kPDLn6o/H2HLR4H4"
   usGreenButton:
-    enabled: "true"
+    enabled: "false"
     basePath: "https://utilityapi.com"
     redirectUrl: "http://eddie.projekte.fh-hagenberg.at:5030"
     client:
@@ -103,3 +109,12 @@ regionConnectors:
         encryptedSecret: "AgBeXSC53CnPMhxlagXgkVowL39ytZEf6WzjoCRI6eYHms0F2cUB9+y5DoGXrKv3QLsnA/mkyxGip9J0YmfiG6y584UL0EQDy1xvhfS/1rw1VbMT3igaOLeJc7KfNA1mCBuSIw+IhVhUazbRBXcIxOn3dYWd/FAVZXDJuET+LPLzWgsAxTV84xnz1nSjbMz18USbLJMIq6ceJSgjziEIfOXhbjvY5uQC0TiAwkq2SaKEfCUQVc6QrJDD+Mb8b4rSCPtIvV/Q2yOnkK/CKJ/bjBP6HY77H/diHq/3R2Ag4WSpYHOeuAj8DLHs9Rq9rHwoZVI29jbMKDKytUMk1D/oSHgd56n+SxyK3HC8K2qVdihKuFcY6qDYnHQxC0Qn6ZIFLp4vl3+m+XAcPz9J9ONfsZAqonuw+yTnS3A2ryfWjCjmXyyxKYb3dcMztOVT8mZNvXSU1oGCIyAjVfTYvL8yItAbQyGJ6IN0paS31vzy9En8oRnyfHOeGIArBAuD9QsXTcNNXmdvJ8dZaZv1p2fEtHrYhNZlNpmMSZNApwUJMRU3s4xWWpDA5XZ6mkbpxeggcTOb+Neruw8Vr6al4G+je2WsCL8ePAzzkBu4ay1Q2fNcbPqSHMg+k81A9/Qx76qPqgFozJjBu+pg2a06XNplzg35Yv7wgTb50lFSzyFSRWg40se8d6Hp3UzHQIMeV6zTcNd4b0dGKaX+rftQmGkNOGjJUqdMDzNhZfXw4VWcsSqAL0jh6sq/yphZ88qzb+MZwb4v8TJVJNfctMaoHJn0wPuU"
   simulation:
     enabled: "true"
+
+outboundConnectors:
+  adminConsole:   
+    enabled: "true"
+    login:  
+      enabled: "true"
+      username: "admin"
+      encodedPassword: "$2a$10$ZkCiPI4pyiGPnCvmHc960uHuKzoefbglw36fcqYXT.BAaKirLsV9y"
+

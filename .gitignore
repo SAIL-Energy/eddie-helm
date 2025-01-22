@@ -17,3 +17,5 @@ eddie-chart/values-hardening.yaml
 # Manually allow pushing our root ca and truststore
 !kafka-tls/root-ca/root-ca-cert.pem
 !kafka-tls/root-ca/root-ca-truststore.jks
+
+eddie-chart/values-unencrypted-*.yaml
