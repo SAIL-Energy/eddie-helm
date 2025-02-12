@@ -41,6 +41,7 @@ upgrade:
 	helm upgrade -n $(NAMESPACE) $(RELEASE_NAME) \
 	--values ./eddie-chart/values.yaml \
 	--values ./eddie-chart/values-$(NAMESPACE).yaml \
+	--values ./eddie-chart/values-unencrypted-$(NAMESPACE).yaml \
 	./eddie-chart
 
 cluster-init:
@@ -65,7 +66,7 @@ create-ghcr-secret:
 	  --docker-password=${CR_PAT}
 
 create-fingrid-jks-secret:
-	kubectl -n $(NAMESPACE) create secret generic fingrid-jks --from-file=fingrid.jks$(FILE_LOCATION)
+	kubectl -n $(NAMESPACE) create secret generic fingrid-jks --from-file=fingrid.jks=$(FILE_LOCATION)
 
 create-aansluiting-jks-secret:
 	kubectl -n $(NAMESPACE) create secret generic aansluiting-jks --from-file=aansluiting.jks=$(FILE_LOCATION)

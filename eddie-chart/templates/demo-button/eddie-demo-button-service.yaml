@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-demo-button
+  labels:
+    app: {{ .Release.Name }}-demo-button
+    {{- include "eddie.labels" . | indent 2 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-demo-button
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
