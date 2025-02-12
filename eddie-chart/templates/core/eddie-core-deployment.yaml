@@ -69,6 +69,7 @@ spec:
             {{- include "eddie.region-connectors.us-green-button.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.nl-mijn-aansluiting.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.fi-fingrid.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.dk-energinet.envs" . | indent 12 }}
             {{- include "eddie.outbound-connectors.admin-console.envs" . | indent 12 }}
             - name: OUTBOUND_CONNECTOR_KAFKA_FORMAT
               value: {{ .Values.outboundConnectors.kafka.format | quote }}

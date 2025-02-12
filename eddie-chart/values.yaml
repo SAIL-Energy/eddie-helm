@@ -140,10 +140,9 @@ regionConnectors:
     enabled: "false"
     customer:
       client:
-        id: ""
         basePath: ""
-    polling: ""
-    retry: ""
+    polling: "0 0 17 * * *"
+    retry: "0 0 17 * * *"
 
   aiida:
     enabled: "false"

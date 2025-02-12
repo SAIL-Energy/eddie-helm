@@ -73,8 +73,6 @@ Environment variable mappings for DK ENERGINET region connector
   value: {{ $energinetValues.enabled | quote }}
 - name: {{ $rcPrefix }}_CUSTOMER_CLIENT_BASEPATH
   value: {{ $energinetValues.customer.client.basePath | quote }}
-- name: {{ $rcPrefix }}_CUSTOMER_CLIENT_ID
-  value: {{ $energinetValues.customer.client.id | quote }}
 - name: {{ $rcPrefix }}_POLLING
   value: {{ $energinetValues.polling | quote }}
 - name: {{ $rcPrefix }}_RETRY
