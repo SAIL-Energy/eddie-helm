@@ -172,6 +172,31 @@ The Postgres database is used by EDDIE Core to store data.
 In general there should be no reason, why you need access to this database.
 Please contact us, if you require access.
 
+## EMQX
+EMQX is the MQTT broker used by EDDIE to handle communication with AIIDA instances.
+Your EMQX servers are reachable at (we have sent you your credentials during the setup):
+
+- University Vienna: `eddie-demo.projekte.fh-hagenberg.at:5101`
+- Digital4Grids: `eddie-demo.projekte.fh-hagenberg.at:5102`
+ 
+### AIIDA Permissions
+In AIIDA, we distinguish between **outbound** and **inbound** permissions.  
+For both types of permissions, status messages are published to the `aiida/v1/<permissionId>/status` topic.
+
+#### Outbound Permissions
+Outbound permissions define cases where data is sent **from AIIDA devices to an EP**.
+A typical use case is when a user wants to share (near) real-time data, such as smart meter readings.
+- AIIDA publishes outbound data to `aiida/v1/<permissionId>/outbound-data`
+- The EP subscribes to this topic to consume the data.
+- If you act as an EP and your application requires real-time data, you can subscribe to `aiida/v1/#` and filter incoming messages by the **permission ID** and the corresponding **(internal) user ID**.  
+
+#### Inbound Permissions
+Inbound permissions define cases where data is sent **from an EP to AIIDA instances**.  
+A common example is the implementation of flexible connection agreements, where an EP provides data such as a production profile to an AIIDA device.
+- The EP publishes inbound data to `aiida/v1/<permissionId>/inbound-data`
+- AIIDA subscribes to this topic to receive the data.
+
+
 ## Kafka Connection Examples
 
 We are currently using a self-signed Certificate Authority for our Kafka Broker Certificates.
