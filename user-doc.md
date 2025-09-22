@@ -186,14 +186,14 @@ For both types of permissions, status messages are published to the `aiida/v1/<p
 #### Outbound Permissions
 Outbound permissions define cases where data is sent **from AIIDA devices to an EP**.
 A typical use case is when a user wants to share (near) real-time data, such as smart meter readings.
-- AIIDA publishes outbound data to `aiida/v1/<permissionId>/outbound-data`
+- AIIDA publishes outbound data to `aiida/v1/<permissionId>/data/outbound`
 - The EP subscribes to this topic to consume the data.
 - If you act as an EP and your application requires real-time data, you can subscribe to `aiida/v1/#` and filter incoming messages by the **permission ID** and the corresponding **(internal) user ID**.  
 
 #### Inbound Permissions
 Inbound permissions define cases where data is sent **from an EP to AIIDA instances**.  
 A common example is the implementation of flexible connection agreements, where an EP provides data such as a production profile to an AIIDA device.
-- The EP publishes inbound data to `aiida/v1/<permissionId>/inbound-data`
+- The EP publishes inbound data to `aiida/v1/<permissionId>/data/outbound`
 - AIIDA subscribes to this topic to receive the data.
 
 
