@@ -116,7 +116,9 @@ spec:
                       {{- $user := . }}
                       {{- range .consumeTopics }}
                     kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
-                                  --add --allow-principal "User:{{ $user.name }}" --consumer --topic "{{ .name }}" --group "{{ .group }}" --resource-pattern-type prefixed
+                                  --add --allow-principal "User:{{ $user.name }}" --operation Read --topic "{{ .name }}" --resource-pattern-type prefixed
+                    kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
+                                  --add --allow-principal "User:{{ $user.name }}" --operation Read --group "{{ .group }}"
                       {{- end }}
                       {{- range .produceTopics }}
                     kafka-acls.sh --bootstrap-server=localhost:9092 --command-config /etc/kafka/client.properties \
