@@ -8,6 +8,12 @@ ingress:
     enabled: "false"
     clusterIssuer: ""
 
+eddie:
+  management:
+    url: ""
+    server:
+      urlprefix: ""
+
 postgres:
   replicaCount: 0
   database: "eddie"
@@ -86,7 +92,9 @@ exampleApp:
 
 emqx:
   replicaCount: 0
+  storageSize: "5Gi"
   version: "5.6"
+  externalPort: 5100
 
 core:
   replicaCount: 0
@@ -147,11 +155,10 @@ regionConnectors:
 
   aiida:
     enabled: "false"
-    customer:
-      id: ""
-    bcrypt-strength: ""
+    customerId: ""
+    bcryptStrength: ""
     mqtt:
-      server-uri: ""
+      serverUri: ""
       username: ""
       password: ""
 
