@@ -291,3 +291,27 @@ Environment variable mappings for NL Mijn Aansluiting region connector
       key: mijnAansluitingKeyPassword
 {{- end }}
 {{- end }}
+
+
+{{/*
+Environment variable mappings for AIIDA region connector
+*/}}
+{{- define "eddie.region-connectors.aiida.envs" }}
+{{- $rcPrefix := "REGION_CONNECTOR_AIIDA" }}
+{{- $aiidaValues := .Values.regionConnectors.aiida }}
+{{- if eq $aiidaValues.enabled "true" }}
+- name: {{ $rcPrefix }}_ENABLED
+  value: {{ $aiidaValues.enabled | quote }}
+- name: {{ $rcPrefix }}_CUSTOMER_ID
+  value: {{ $aiidaValues.customerId | quote }}
+- name: {{ $rcPrefix }}_BCRYPT_STRENGTH
+  value: {{ $aiidaValues.bcryptStrength | quote }}
+- name: {{ $rcPrefix }}_MQTT_SERVER_URI
+  value: {{ $aiidaValues.mqtt.serverUri | quote }}
+- name: {{ $rcPrefix }}_MQTT_USERNAME
+  value: {{ $aiidaValues.mqtt.username | quote }}
+- name: {{ $rcPrefix }}_MQTT_PASSWORD
+  value: {{ $aiidaValues.mqtt.password | quote }}
+{{- end }}
+{{- end }}
+
