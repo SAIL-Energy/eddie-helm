@@ -69,15 +69,22 @@ spec:
             {{- include "eddie.region-connectors.us-green-button.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.nl-mijn-aansluiting.envs" . | indent 12 }}
             {{- include "eddie.region-connectors.fi-fingrid.envs" . | indent 12 }}
+            {{- include "eddie.region-connectors.aiida.envs" . | indent 12 }}
             {{- include "eddie.outbound-connectors.admin-console.envs" . | indent 12 }}
             - name: OUTBOUND_CONNECTOR_KAFKA_FORMAT
               value: {{ .Values.outboundConnectors.kafka.format | quote }}
+            - name: OUTBOUND_CONNECTOR_KAFKA_EDDIE_ID
+              value: {{ .Values.outboundConnectors.kafka.eddieId | quote }}
             - name: KAFKA_SECURITY_PROTOCOL
               value: "SASL_PLAINTEXT"
             - name: KAFKA_SASL_MECHANISM
               value: "SCRAM-SHA-512"
             - name: KAFKA_SASL_JAAS_CONFIG
               value: "org.apache.kafka.common.security.scram.ScramLoginModule required username='{{ .Values.core.kafkaUser.username }}' password='{{ .Values.core.kafkaUser.password }}';"
+            - name: EDDIE_MANAGEMENT_URL
+              value: {{ .Values.eddie.management.url | quote }}
+            - name: EDDIE_MANAGEMENT_SERVER_URLPREFIX
+              value: {{ .Values.eddie.management.server.urlprefix | quote }}
 
       imagePullSecrets:
         - name: {{ .Values.ghcrImagePullSecrets.name }}
