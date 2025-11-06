@@ -25,3 +25,14 @@ spec:
           env:
             - name: EMQX_NAME
               value: emqx_node
+            - name: EMQX_HOST
+              value: 127.0.0.1
+          volumeMounts:
+            - name: emqx-data
+              mountPath: /opt/emqx/data
+
+      volumes:
+        - name: emqx-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-emqx-data-pvc
+

@@ -1,0 +1,15 @@
+{{- if gt (default "0" .Values.emqx.replicaCount | int) 0 -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-emqx-load-balancer
+  {{- include "eddie.emqx.labels" . | indent 2 }}
+spec:
+  selector:
+    app: {{ .Release.Name }}-emqx
+  type: LoadBalancer
+  ports:
+    - name: emqx-load-balancer
+      port: {{ .Values.emqx.externalPort }}
+      targetPort: 1883
+{{- end }}
